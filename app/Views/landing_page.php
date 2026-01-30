@@ -16,14 +16,14 @@
             border-bottom-right-radius: 50% 20px;
         }
         .card-umkm {
-            cursor: pointer; /* Biar kursor jadi tangan */
+            cursor: pointer;
             transition: all 0.3s;
         }
         .card-umkm:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
         }
-        /* Style Modal Biar Keren */
+        /* Style Modal */
         .modal-header { background-color: #f8f9fa; border-bottom: 1px solid #eee; }
         .modal-img-container {
             background: #000;
@@ -32,11 +32,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-        .modal-img-detail {
-            max-height: 400px;
-            max-width: 100%;
-            object-fit: contain;
         }
     </style>
   </head>
@@ -105,7 +100,6 @@
                 <?php foreach($umkm as $row): ?>
                     <?php 
                         $foto = $row['foto_umkm'] ? 'uploads/umkm/'.$row['foto_umkm'] : 'https://placehold.co/600x400?text=No+Image'; 
-                        // KITA PAKAI ONCLICK UNTUK MEMANGGIL FUNGSI JS
                     ?>
                     <div class="col">
                         <div class="card h-100 card-umkm shadow-sm border-0" onclick="bukaPopup(<?= $row['id_umkm'] ?>)">
@@ -137,7 +131,8 @@
     </div>
 
     <div class="modal fade" id="modalDetail" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-xl modal-dialog-centered"> <div class="modal-content overflow-hidden border-0 shadow-lg rounded-4" style="min-height: 500px;">
+      <div class="modal-dialog modal-xl modal-dialog-centered"> 
+        <div class="modal-content overflow-hidden border-0 shadow-lg rounded-4" style="min-height: 500px;">
           
           <div class="row g-0 h-100">
             <div class="col-lg-7 bg-dark d-flex align-items-center justify-content-center" style="min-height: 400px; background-color: #000;">
@@ -182,16 +177,16 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
     <script>
         // 1. Siapkan Variabel URL biar JS tau alamat website
-       <script>
         const BASE_URL = "<?= base_url() ?>";
 
         function bukaPopup(id) {
             // Tampilkan Modal Loading
             var myModal = new bootstrap.Modal(document.getElementById('modalDetail'));
             document.getElementById('popupJudul').innerText = "Memuat...";
-            document.getElementById('popupFoto').src = "https://placehold.co/800x600?text=Loading..."; // Placeholder loading
+            document.getElementById('popupFoto').src = "https://placehold.co/800x600?text=Loading..."; 
             myModal.show();
 
             // Ambil Data dari Server
@@ -206,7 +201,7 @@
                     document.getElementById('popupPemilik').innerText = data.pemilik;
                     document.getElementById('popupWilayah').innerText = data.nama_wilayah;
                     document.getElementById('popupRW').innerText = "RW " + data.rw;
-                    document.getElementById('popupRT').innerText = "RT " + data.rt; // Ambil kolom RT dari UMKM
+                    document.getElementById('popupRT').innerText = "RT " + data.rt;
                     document.getElementById('popupDeskripsi').innerText = data.produk;
 
                     // Urus Foto
@@ -215,9 +210,7 @@
 
                     // Urus Tombol WA
                     if(data.kontak_hp) {
-                        // Bersihkan nomor HP (hapus spasi/strip jika ada)
                         let hp = data.kontak_hp.replace(/\D/g,''); 
-                        // Kalau diawali 0, ganti jadi 62
                         if(hp.startsWith('0')){ hp = '62' + hp.substring(1); }
                         
                         let pesan = "Halo, saya lihat " + data.nama_usaha + " di Web Desa Candimulyo...";
@@ -235,7 +228,7 @@
                 .catch(error => {
                     console.error('Error:', error);
                     document.getElementById('popupJudul').innerText = "Error";
-                    document.getElementById('popupDeskripsi').innerText = "Gagal memuat data. Silakan coba lagi.";
+                    document.getElementById('popupDeskripsi').innerText = "Gagal memuat data.";
                 });
         }
     </script>

@@ -16,46 +16,24 @@ class Auth extends BaseController
         return view('auth/login');
     }
 
-    public function loginProcess()
+   public function loginProcess()
     {
         $session = session();
         $model = new UserModel();
         
-        // 1. Ambil inputan dari form
+        // 1. Ambil inputan
         $username = $this->request->getPost('username');
         $password = $this->request->getPost('password');
 
-        // 2. Cari user berdasarkan username
+        // 2. Cari user
         $data = $model->where('username', $username)->first();
 
         if ($data) {
-            // 3. Cek Password (pakai verify karena terenkripsi)
-            // Note: Karena tadi kita input manual SQL dummy, hash-nya mungkin tidak cocok.
-            // Nanti kita coba dulu.
-            
-            // Password sementara (hardcode) buat tes SQL manual tadi
-            // Nanti kita ganti verify beneran.
+            // 3. Cek Password (VERSI BERSIH - TANPA JURUS DARURAT)
             $pass_db = $data['password'];
-            
-            // Logika verifikasi password
-            // Password 'admin123' yang saya kasih di SQL mungkin beda salt-nya di laptopmu.
-            // JADI KITA PAKAI CARA: UPDATE PASSWORD DULU BIAR AMAN.
-            // Abaikan dulu verifikasi rumit, kita anggap kalau username 'admin' lolos dulu
-            // Nanti kita perbaiki hash-nya lewat fitur reset sederhana.
-            
-            // Coba verifikasi standar
             $verify = password_verify($password, $pass_db);
-            
-            // *JURUS DARURAT* (Hanya kalau hash SQL tadi gagal):
-            // Kalau password input == 'admin123', kita paksa update hash database
-            if (!$verify && $password == 'admin123' && $username == 'admin') {
-                $newHash = password_hash('admin123', PASSWORD_DEFAULT);
-                $model->update($data['id_user'], ['password' => $newHash]);
-                $verify = true; // Anggap sukses
-            }
 
             if ($verify) {
-                // Password Benar! Simpan sesi
                 $ses_data = [
                     'id_user'       => $data['id_user'],
                     'username'      => $data['username'],
