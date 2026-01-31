@@ -29,8 +29,9 @@ class Auth extends BaseController
         $data = $model->where('username', $username)->first();
 
         if ($data) {
-            // 3. Cek Password (VERSI BERSIH - TANPA JURUS DARURAT)
-            $pass_db = $data['password'];
+            // PERBAIKAN: Ambil dari kolom 'password_hash'
+            $pass_db = $data['password_hash']; 
+            
             $verify = password_verify($password, $pass_db);
 
             if ($verify) {

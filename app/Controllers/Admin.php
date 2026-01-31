@@ -40,32 +40,39 @@ class Admin extends BaseController
     {
         $umkmModel = new UmkmModel();
 
-        // 1. Ambil file foto dari form
+        // 1. STANDARDISASI NOMOR HP (Auto 62)
+        $hp = $this->request->getPost('kontak_hp');
+        // Hapus karakter aneh (spasi, strip, plus), sisakan angka
+        $hp = preg_replace('/[^0-9]/', '', $hp);
+        // Kalau diawali 0, ganti jadi 62. Kalau 8, tambah 62 di depan.
+        if (substr($hp, 0, 1) === '0') {
+            $hp = '62' . substr($hp, 1);
+        } elseif (substr($hp, 0, 1) === '8') {
+            $hp = '62' . $hp;
+        }
+
+        // 2. STANDARDISASI NAMA FILE (Tanggal + Unik)
         $fileFoto = $this->request->getFile('foto_umkm');
         
-        // Cek apakah user upload foto?
         if ($fileFoto && $fileFoto->isValid() && ! $fileFoto->hasMoved()) {
-            // Generate nama file unik (biar gak bentrok)
-            $namaFoto = $fileFoto->getRandomName();
-            // Pindahkan file ke folder public/uploads/umkm
+            // Format: YYYYMMDD_jam_acak.ext (Contoh: 20260201_143000_123.jpg)
+            $namaFoto = date('Ymd_His') . '_' . $fileFoto->getRandomName();
             $fileFoto->move('uploads/umkm', $namaFoto);
         } else {
-            // Kalau gak upload, pakai default
             $namaFoto = 'default.jpg';
         }
 
-        // 2. Simpan semua data ke database
+        // 3. Simpan
         $umkmModel->save([
             'nama_usaha' => $this->request->getPost('nama_usaha'),
             'pemilik'    => $this->request->getPost('pemilik'),
             'id_wilayah' => $this->request->getPost('id_wilayah'),
             'rt'         => $this->request->getPost('rt'),
             'produk'     => $this->request->getPost('produk'),
-            'kontak_hp'  => $this->request->getPost('kontak_hp'),
+            'kontak_hp'  => $hp, // Pakai variabel $hp yang sudah bersih
             'foto_umkm'  => $namaFoto
         ]);
 
-        // 3. Kembali ke halaman admin
         return redirect()->to('admin');
     }
 
@@ -95,30 +102,40 @@ class Admin extends BaseController
     }
 
     // Proses Simpan Perubahan
-    public function update($id)
+    public function update()
     {
         $umkmModel = new UmkmModel();
-        
-        // Cek apakah user upload foto baru?
+
+        // 1. STANDARDISASI NOMOR HP (Auto 62)
+        $hp = $this->request->getPost('kontak_hp');
+        // Hapus karakter aneh (spasi, strip, plus), sisakan angka
+        $hp = preg_replace('/[^0-9]/', '', $hp);
+        // Kalau diawali 0, ganti jadi 62. Kalau 8, tambah 62 di depan.
+        if (substr($hp, 0, 1) === '0') {
+            $hp = '62' . substr($hp, 1);
+        } elseif (substr($hp, 0, 1) === '8') {
+            $hp = '62' . $hp;
+        }
+
+        // 2. STANDARDISASI NAMA FILE (Tanggal + Unik)
         $fileFoto = $this->request->getFile('foto_umkm');
         
         if ($fileFoto && $fileFoto->isValid() && ! $fileFoto->hasMoved()) {
-            // Kalau upload baru -> Generate nama & Pindahkan
-            $namaFoto = $fileFoto->getRandomName();
+            // Format: YYYYMMDD_jam_acak.ext (Contoh: 20260201_143000_123.jpg)
+            $namaFoto = date('Ymd_His') . '_' . $fileFoto->getRandomName();
             $fileFoto->move('uploads/umkm', $namaFoto);
         } else {
-            // Kalau tidak upload -> Pakai nama foto lama (hidden input)
-            $namaFoto = $this->request->getPost('foto_lama');
+            $namaFoto = 'default.jpg';
         }
 
-        // Simpan update
-        $umkmModel->update($id, [
+        // 3. Simpan
+        $umkmModel->update([
             'nama_usaha' => $this->request->getPost('nama_usaha'),
             'pemilik'    => $this->request->getPost('pemilik'),
             'id_wilayah' => $this->request->getPost('id_wilayah'),
             'rt'         => $this->request->getPost('rt'),
             'produk'     => $this->request->getPost('produk'),
-            'kontak_hp'  => $this->request->getPost('kontak_hp'),
+            'kontak_hp'  => $hp, // Pakai variabel $hp yang sudah bersih
             'foto_umkm'  => $namaFoto
         ]);
 

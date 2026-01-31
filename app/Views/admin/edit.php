@@ -16,6 +16,7 @@
         <div class="card-body">
           
           <form action="<?= base_url('admin/update/' . $umkm['id_umkm']) ?>" method="post" enctype="multipart/form-data">
+            <?= csrf_field() ?> <div class="mb-3">
             
             <input type="hidden" name="foto_lama" value="<?= $umkm['foto_umkm'] ?>">
 

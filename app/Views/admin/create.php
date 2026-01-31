@@ -16,6 +16,7 @@
         <div class="card-body">
           
           <form action="<?= base_url('admin/save') ?>" method="post" enctype="multipart/form-data">
+            <?= csrf_field() ?> <div class="mb-3">
             
             <div class="mb-3">
               <label class="form-label">Nama Usaha</label>
