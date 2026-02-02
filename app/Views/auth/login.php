@@ -58,7 +58,7 @@
 
       </div>
       <div class="card-footer text-center bg-white pb-4">
-        <small class="text-muted">&copy; 2026 KKN GIAT 15 UNNES</small>
+            <small class="text-muted">&copy; 2026 KKN GIAT 15 UNNES</small>
       </div>
     </div>
 

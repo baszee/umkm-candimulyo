@@ -101,41 +101,46 @@ class Admin extends BaseController
         return view('admin/edit', $data);
     }
 
-    // Proses Simpan Perubahan
-    public function update()
+// Proses Simpan Perubahan
+    public function update($id) // <--- PERBAIKAN 1: Tambahkan parameter $id
     {
         $umkmModel = new UmkmModel();
 
-        // 1. STANDARDISASI NOMOR HP (Auto 62)
+        // 1. STANDARDISASI NOMOR HP
         $hp = $this->request->getPost('kontak_hp');
-        // Hapus karakter aneh (spasi, strip, plus), sisakan angka
         $hp = preg_replace('/[^0-9]/', '', $hp);
-        // Kalau diawali 0, ganti jadi 62. Kalau 8, tambah 62 di depan.
         if (substr($hp, 0, 1) === '0') {
             $hp = '62' . substr($hp, 1);
         } elseif (substr($hp, 0, 1) === '8') {
             $hp = '62' . $hp;
         }
 
-        // 2. STANDARDISASI NAMA FILE (Tanggal + Unik)
+        // 2. LOGIK FOTO (PERBAIKAN AGAR TIDAK HILANG)
         $fileFoto = $this->request->getFile('foto_umkm');
         
         if ($fileFoto && $fileFoto->isValid() && ! $fileFoto->hasMoved()) {
-            // Format: YYYYMMDD_jam_acak.ext (Contoh: 20260201_143000_123.jpg)
+            // Kalau upload baru -> Generate nama baru & Pindahkan
             $namaFoto = date('Ymd_His') . '_' . $fileFoto->getRandomName();
             $fileFoto->move('uploads/umkm', $namaFoto);
         } else {
-            $namaFoto = 'default.jpg';
+            // Kalau tidak upload -> Pakai nama foto lama dari hidden input
+            // Pastikan di view edit.php ada <input type="hidden" name="foto_lama">
+            $namaFoto = $this->request->getPost('foto_lama');
+            
+            // Jaga-jaga kalau kosong, balikin ke default (opsional)
+            if (empty($namaFoto)) {
+                $namaFoto = 'default.jpg';
+            }
         }
 
-        // 3. Simpan
-        $umkmModel->update([
+        // 3. SIMPAN UPDATE DENGAN ID
+        $umkmModel->update($id, [ // <--- PERBAIKAN 2: Masukkan $id sebagai parameter pertama
             'nama_usaha' => $this->request->getPost('nama_usaha'),
             'pemilik'    => $this->request->getPost('pemilik'),
             'id_wilayah' => $this->request->getPost('id_wilayah'),
             'rt'         => $this->request->getPost('rt'),
             'produk'     => $this->request->getPost('produk'),
-            'kontak_hp'  => $hp, // Pakai variabel $hp yang sudah bersih
+            'kontak_hp'  => $hp,
             'foto_umkm'  => $namaFoto
         ]);
 
