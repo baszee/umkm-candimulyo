@@ -63,7 +63,7 @@
 
             <div class="mb-4">
               <label class="form-label required">Nama Usaha</label>
-              <input type="text" name="nama_usaha" class="form-control form-control-lg" 
+              <input type="text" name="nama_usaha" class="form-control" 
                      required placeholder="Contoh: Keripik Tempe Bu Susi"
                      value="<?= esc($umkm['nama_usaha']) ?>">
             </div>
@@ -71,12 +71,12 @@
             <div class="row">
                 <div class="col-12 col-md-6 mb-4">
                     <label class="form-label required">Nama Pemilik</label>
-                    <input type="text" name="pemilik" class="form-control form-control-lg" 
+                    <input type="text" name="pemilik" class="form-control" 
                            required value="<?= esc($umkm['pemilik']) ?>">
                 </div>
                 <div class="col-12 col-md-6 mb-4">
                     <label class="form-label">No HP / WhatsApp</label>
-                    <div class="input-group input-group-lg">
+                    <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-whatsapp text-success"></i></span>
                         <input type="tel" name="kontak_hp" class="form-control" 
                                placeholder="Contoh: 081234567890" 
@@ -90,7 +90,7 @@
             <div class="row">
                 <div class="col-12 col-md-6 mb-4">
                     <label class="form-label required">Wilayah (Dusun/RW)</label>
-                    <select name="id_wilayah" class="form-select form-select-lg" required>
+                    <select name="id_wilayah" class="form-select" required>
                         <option value="">-- Pilih Wilayah --</option>
                         <?php foreach($wilayah as $w): ?>
                             <option value="<?= $w['id_wilayah'] ?>" <?= ($w['id_wilayah'] == $umkm['id_wilayah']) ? 'selected' : '' ?>>
@@ -101,7 +101,7 @@
                 </div>
                 <div class="col-12 col-md-6 mb-4">
                     <label class="form-label required">RT</label>
-                    <input type="text" name="rt" class="form-control form-control-lg" 
+                    <input type="text" name="rt" class="form-control" 
                            placeholder="Contoh: 04" required maxlength="5"
                            value="<?= esc($umkm['rt']) ?>">
                 </div>
@@ -125,7 +125,7 @@
                   </div>
               <?php endif; ?>
               
-              <input type="file" name="foto_umkm" class="form-control form-control-lg" 
+              <input type="file" name="foto_umkm" class="form-control" 
                      accept="image/*" capture="camera">
               <small class="text-muted">
                   <i class="bi bi-info-circle me-1"></i>

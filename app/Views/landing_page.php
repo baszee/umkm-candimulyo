@@ -245,12 +245,12 @@
                     <input type="hidden" name="view" value="<?= $viewMode ?>">
                     <div class="row g-3">
                         <div class="col-12 col-md-5">
-                            <input type="text" name="cari" class="form-control form-control-lg" 
-                                   placeholder="Cari nama usaha atau produk..." 
-                                   value="<?= esc($keyword) ?>">
+                            <input type="text" name="cari" class="form-control" 
+                                placeholder="Cari nama usaha atau produk..." 
+                                value="<?= esc($keyword) ?>">
                         </div>
                         <div class="col-12 col-md-4">
-                            <select name="wilayah" class="form-select form-select-lg">
+                            <select name="wilayah" class="form-select">
                                 <option value="">- Semua Wilayah -</option>
                                 <?php foreach($list_wilayah as $w): ?>
                                     <option value="<?= $w['id_wilayah'] ?>" <?= ($selectedWilayah == $w['id_wilayah']) ? 'selected' : '' ?>>
@@ -260,7 +260,7 @@
                             </select>
                         </div>
                         <div class="col-12 col-md-3 d-grid">
-                            <button class="btn btn-primary bg-gradient fw-bold btn-lg" type="submit">
+                            <button class="btn btn-primary bg-gradient fw-bold" type="submit">
                                 <i class="bi bi-search me-2"></i>Cari
                             </button>
                         </div>
@@ -619,10 +619,23 @@
                         document.getElementById('popupWA').innerHTML = '<i class="bi bi-x-circle me-2"></i>Tidak Ada Kontak';
                     }
                 })
+                
                 .catch(error => {
                     console.error('Error:', error);
-                    document.getElementById('popupJudul').innerText = "Error";
-                    document.getElementById('popupDeskripsi').innerText = "Gagal memuat data. Silakan coba lagi.";
+                    
+                    // Tampilkan error yang lebih informatif
+                    document.getElementById('popupJudul').innerText = "❌ Gagal Memuat Data";
+                    document.getElementById('popupDeskripsi').innerText = 
+                        "Maaf, terjadi kesalahan saat mengambil data UMKM ini. " + 
+                        "Silakan coba lagi atau hubungi administrator jika masalah berlanjut.";
+                    
+                    // Hide tombol WA karena data tidak valid
+                    document.getElementById('popupWA').style.display = 'none';
+                    
+                    // Optional: Auto-close modal setelah 3 detik
+                    setTimeout(() => {
+                        myModal.hide();
+                    }, 3000);
                 });
         }
 

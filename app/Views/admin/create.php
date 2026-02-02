@@ -61,23 +61,23 @@
             
             <div class="mb-4">
               <label class="form-label required">Nama Usaha</label>
-              <input type="text" name="nama_usaha" class="form-control form-control-lg" 
-                     required placeholder="Contoh: Keripik Tempe Bu Susi"
-                     value="<?= old('nama_usaha') ?>">
+              <input type="text" name="nama_usaha" class="form-control" 
+                    required placeholder="Contoh: Keripik Tempe Bu Susi"
+                    value="<?= old('nama_usaha') ?>">
               <small class="text-muted">Masukkan nama usaha yang mudah diingat</small>
             </div>
 
             <div class="row">
                 <div class="col-12 col-md-6 mb-4">
                     <label class="form-label required">Nama Pemilik</label>
-                    <input type="text" name="pemilik" class="form-control form-control-lg" 
-                           required value="<?= old('pemilik') ?>">
+                    <input type="text" name="pemilik" class="form-control" 
+                        required value="<?= old('pemilik') ?>">
                 </div>
                 <div class="col-12 col-md-6 mb-4">
                     <label class="form-label">No HP / WhatsApp</label>
-                    <div class="input-group input-group-lg">
+                    <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-whatsapp text-success"></i></span>
-                        <input type="tel" name="kontak_hp" class="form-control" 
+                        <input type="tel" name="kontak_hp" class="form-control"
                                placeholder="Contoh: 081234567890" 
                                pattern="[0-9+]+"
                                value="<?= old('kontak_hp') ?>">
@@ -89,7 +89,7 @@
             <div class="row">
                 <div class="col-12 col-md-6 mb-4">
                     <label class="form-label required">Wilayah (Dusun/RW)</label>
-                    <select name="id_wilayah" class="form-select form-select-lg" required>
+                    <select name="id_wilayah" class="form-select" required>
                         <option value="">-- Pilih Wilayah --</option>
                         <?php foreach($wilayah as $w): ?>
                             <option value="<?= $w['id_wilayah'] ?>" <?= old('id_wilayah') == $w['id_wilayah'] ? 'selected' : '' ?>>
@@ -100,7 +100,7 @@
                 </div>
                 <div class="col-12 col-md-6 mb-4">
                     <label class="form-label required">RT</label>
-                    <input type="text" name="rt" class="form-control form-control-lg" 
+                    <input type="text" name="rt" class="form-control" 
                            placeholder="Contoh: 04" required maxlength="5"
                            value="<?= old('rt') ?>">
                     <small class="text-muted">Cukup angka saja (misal: 04)</small>
@@ -116,7 +116,7 @@
 
             <div class="mb-4">
               <label class="form-label">Foto Produk/Usaha</label>
-              <input type="file" name="foto_umkm" class="form-control form-control-lg" 
+              <input type="file" name="foto_umkm" class="form-control"
                      accept="image/*" capture="camera">
               <small class="text-muted">
                   <i class="bi bi-info-circle me-1"></i>
