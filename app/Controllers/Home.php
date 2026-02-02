@@ -12,12 +12,13 @@ class Home extends BaseController
         $umkmModel = new UmkmModel();
         $wilayahModel = new WilayahModel();
 
-        // 1. Ambil Parameter Filter
+        // Ambil Parameter Filter
         $keyword = $this->request->getGet('cari');
         $filterWilayah = $this->request->getGet('wilayah');
+        $filterKategori = $this->request->getGet('kategori'); // <--- BARU
         $viewMode = $this->request->getGet('view') ? $this->request->getGet('view') : 'grid';
 
-        // 2. Query Data
+        // Query Data
         $builder = $umkmModel->select('tb_umkm.*, tb_wilayah.nama_wilayah, tb_wilayah.rw')
                              ->join('tb_wilayah', 'tb_wilayah.id_wilayah = tb_umkm.id_wilayah');
 
@@ -32,15 +33,22 @@ class Home extends BaseController
             $builder->where('tb_umkm.id_wilayah', $filterWilayah);
         }
 
+        // LOGIKA FILTER KATEGORI BARU
+       if ($filterKategori) {
+        // Pakai LIKE agar pencarian "Jasa" tetap menemukan "Kuliner, Jasa"
+            $builder->like('tb_umkm.kategori', $filterKategori);
+        }
+
         $umkm = $builder->orderBy('tb_umkm.created_at', 'DESC')->findAll();
 
         $data = [
-            'title'         => 'Portal UMKM Desa Candimulyo',
-            'umkm'          => $umkm,
-            'list_wilayah'  => $wilayahModel->findAll(),
-            'keyword'       => $keyword,
+            'title'           => 'Portal UMKM Desa Candimulyo',
+            'umkm'            => $umkm,
+            'list_wilayah'    => $wilayahModel->findAll(),
+            'keyword'         => $keyword,
             'selectedWilayah' => $filterWilayah,
-            'viewMode'      => $viewMode
+            'selectedKategori'=> $filterKategori, // <--- Kirim balik ke view
+            'viewMode'        => $viewMode
         ];
 
         return view('landing_page', $data);
@@ -50,17 +58,14 @@ class Home extends BaseController
     {
         $umkmModel = new UmkmModel();
         
-        // PERBAIKAN: Hapus 'tb_wilayah.rt' karena RT ada di tb_umkm
         $data = $umkmModel->select('tb_umkm.*, tb_wilayah.nama_wilayah, tb_wilayah.rw')
                           ->join('tb_wilayah', 'tb_wilayah.id_wilayah = tb_umkm.id_wilayah')
                           ->find($id);
 
-        // Kalau data tidak ditemukan (misal id ngawur)
         if (!$data) {
             return $this->response->setStatusCode(404)->setJSON(['error' => 'Data tidak ditemukan']);
         }
 
-        // Kirim sebagai JSON
         return $this->response->setJSON($data);
     }
 }

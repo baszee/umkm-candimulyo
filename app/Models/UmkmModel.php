@@ -11,14 +11,14 @@ class UmkmModel extends Model
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     
-    // Fitur otomatis catat tanggal input
     protected $useTimestamps    = true;
     protected $createdField     = 'created_at';
     protected $updatedField     = 'updated_at';
 
-    // Kolom yang boleh diisi form (sesuai database kita)
+    // KITA TAMBAHKAN 'kategori' DI SINI
     protected $allowedFields    = [
         'id_wilayah', 
+        'kategori', 
         'nama_usaha', 
         'pemilik', 
         'rt', 
@@ -27,7 +27,6 @@ class UmkmModel extends Model
         'foto_umkm'
     ];
     
-    // Fungsi khusus untuk menggabungkan data UMKM dengan Nama Wilayahnya
     public function getUmkmLengkap()
     {
         return $this->select('tb_umkm.*, tb_wilayah.nama_wilayah, tb_wilayah.rw')

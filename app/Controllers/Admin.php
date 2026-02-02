@@ -9,14 +9,14 @@ use App\Models\WilayahModel;
 class Admin extends BaseController
 {
     /**
-     * Validasi file upload
+     * Validasi file upload (Fungsi Helper)
      * @return bool|string true jika valid, string error jika tidak
      */
     private function validateUpload($file)
     {
         // Cek apakah file ada
         if (!$file || !$file->isValid()) {
-            return true; // Boleh kosong (pakai default)
+            return true; // Boleh kosong (nanti pakai default)
         }
         
         // Whitelist MIME type (KEAMANAN!)
@@ -45,7 +45,7 @@ class Admin extends BaseController
         $umkmModel = new UmkmModel();
         $wilayahModel = new WilayahModel();
         
-        // 1. Ambil Data Tabel (seperti biasa)
+        // 1. Ambil Data Tabel (Join Wilayah)
         $data['umkm'] = $umkmModel->getUmkmLengkap(); 
         
         // 2. Hitung Statistik buat Dashboard
@@ -60,7 +60,7 @@ class Admin extends BaseController
     {
         $wilayahModel = new WilayahModel();
         
-        // Kita kirim daftar wilayah ke form biar bisa dipilih
+        // Kirim daftar wilayah ke form biar bisa dipilih
         $data['wilayah'] = $wilayahModel->findAll();
         
         return view('admin/create', $data);
@@ -107,11 +107,11 @@ class Admin extends BaseController
         }
         
         if ($fileFoto && $fileFoto->isValid() && ! $fileFoto->hasMoved()) {
-            // Format: YYYYMMDD_jam_acak.ext (Contoh: 20260201_143000_123.jpg)
+            // Format: YYYYMMDD_jam_acak.ext
             $namaFoto = date('Ymd_His') . '_' . $fileFoto->getRandomName();
             
-            // PERBAIKAN: Pakai FCPATH untuk path absolut ke public/
-            $fileFoto->move(FCPATH . 'uploads/umkm', $namaFoto);
+            // Pindahkan file ke public/uploads/umkm
+            $fileFoto->move('uploads/umkm', $namaFoto);
         } else {
             $namaFoto = 'default.jpg';
         }
@@ -119,6 +119,7 @@ class Admin extends BaseController
         // 3. Simpan
         $umkmModel->save([
             'nama_usaha' => $this->request->getPost('nama_usaha'),
+            'kategori' => implode(', ', (array)$this->request->getPost('kategori')),
             'pemilik'    => $this->request->getPost('pemilik'),
             'id_wilayah' => $this->request->getPost('id_wilayah'),
             'rt'         => $this->request->getPost('rt'),
@@ -140,7 +141,7 @@ class Admin extends BaseController
         
         // Hapus file foto jika bukan default
         if ($umkm && $umkm['foto_umkm'] !== 'default.jpg') {
-            $filePath = FCPATH . 'uploads/umkm/' . $umkm['foto_umkm'];
+            $filePath = 'uploads/umkm/' . $umkm['foto_umkm'];
             if (file_exists($filePath)) {
                 unlink($filePath);
             }
@@ -164,13 +165,13 @@ class Admin extends BaseController
         $data['wilayah'] = $wilayahModel->findAll();
 
         if (empty($data['umkm'])) {
-            return redirect()->to('admin'); // Kalau data gak ada, balik ke admin
+            return redirect()->to('admin'); 
         }
 
         return view('admin/edit', $data);
     }
 
-    // Proses Simpan Perubahan
+    // Proses Simpan Perubahan (UPDATE)
     public function update($id)
     {
         $umkmModel = new UmkmModel();
@@ -178,33 +179,26 @@ class Admin extends BaseController
         // 1. STANDARDISASI NOMOR HP
         $hp = $this->request->getPost('kontak_hp');
         
-        // Jika HP kosong, boleh (opsional)
         if (empty($hp)) {
             $hp = '';
         } else {
-            // Hapus karakter aneh (spasi, strip, plus), sisakan angka
             $hp = preg_replace('/[^0-9]/', '', $hp);
-            
-            // Kalau diawali 0, ganti jadi 62. Kalau 8, tambah 62 di depan.
             if (substr($hp, 0, 1) === '0') {
                 $hp = '62' . substr($hp, 1);
             } elseif (substr($hp, 0, 1) === '8') {
                 $hp = '62' . $hp;
             } elseif (substr($hp, 0, 2) !== '62') {
-                // Jika tidak dimulai 0, 8, atau 62 -> error
                 return redirect()->back()->withInput()->with('errors', ['Nomor HP harus dimulai dengan 0, 8, atau 62']);
             }
-            
-            // Validasi panjang (nomor Indonesia: 10-15 digit)
             if (strlen($hp) < 10 || strlen($hp) > 15) {
-                return redirect()->back()->withInput()->with('errors', ['Nomor HP tidak valid (terlalu pendek/panjang)']);
+                return redirect()->back()->withInput()->with('errors', ['Nomor HP tidak valid']);
             }
         }
 
-        // 2. LOGIK FOTO (PERBAIKAN AGAR TIDAK HILANG)
+        // 2. LOGIK FOTO
         $fileFoto = $this->request->getFile('foto_umkm');
         
-        // VALIDASI FILE UPLOAD (KEAMANAN!)
+        // VALIDASI FILE
         $validation = $this->validateUpload($fileFoto);
         if ($validation !== true) {
             return redirect()->back()->withInput()->with('errors', [$validation]);
@@ -213,23 +207,19 @@ class Admin extends BaseController
         if ($fileFoto && $fileFoto->isValid() && ! $fileFoto->hasMoved()) {
             // Kalau upload baru -> Generate nama baru & Pindahkan
             $namaFoto = date('Ymd_His') . '_' . $fileFoto->getRandomName();
-            
-            // PERBAIKAN: Pakai FCPATH untuk path absolut ke public/
-            $fileFoto->move(FCPATH . 'uploads/umkm', $namaFoto);
+            $fileFoto->move('uploads/umkm', $namaFoto);
             
             // Hapus foto lama jika bukan default
             $umkmLama = $umkmModel->find($id);
             if ($umkmLama && $umkmLama['foto_umkm'] !== 'default.jpg') {
-                $filePathLama = FCPATH . 'uploads/umkm/' . $umkmLama['foto_umkm'];
+                $filePathLama = 'uploads/umkm/' . $umkmLama['foto_umkm'];
                 if (file_exists($filePathLama)) {
                     unlink($filePathLama);
                 }
             }
         } else {
-            // Kalau tidak upload -> Pakai nama foto lama dari hidden input
+            // Kalau tidak upload -> Pakai nama foto lama
             $namaFoto = $this->request->getPost('foto_lama');
-            
-            // Jaga-jaga kalau kosong, balikin ke default (opsional)
             if (empty($namaFoto)) {
                 $namaFoto = 'default.jpg';
             }
@@ -238,6 +228,7 @@ class Admin extends BaseController
         // 3. SIMPAN UPDATE DENGAN ID
         $umkmModel->update($id, [
             'nama_usaha' => $this->request->getPost('nama_usaha'),
+            'kategori' => implode(', ', (array)$this->request->getPost('kategori')),
             'pemilik'    => $this->request->getPost('pemilik'),
             'id_wilayah' => $this->request->getPost('id_wilayah'),
             'rt'         => $this->request->getPost('rt'),
@@ -258,7 +249,7 @@ class Admin extends BaseController
         // Nama file saat didownload
         $filename = 'Data_UMKM_Desa_Candimulyo_' . date('Y-m-d_H-i') . '.csv';
 
-        // Setting Header Browser (PERBAIKAN: Tambah charset UTF-8)
+        // Setting Header Browser
         header("Content-Description: File Transfer");
         header("Content-Disposition: attachment; filename=$filename");
         header("Content-Type: text/csv; charset=utf-8");
@@ -266,33 +257,30 @@ class Admin extends BaseController
         // Buka pintu output file
         $file = fopen('php://output', 'w');
         
-        // PERBAIKAN: Tambah UTF-8 BOM untuk Excel Indonesia
-        fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
-        
-        // PERBAIKAN: Tambah UTF-8 BOM untuk Excel Indonesia
+        // Tambah UTF-8 BOM untuk Excel Indonesia biar simbol aman
         fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
 
-        // 1. Tulis Baris Judul (Header Kolom)
-        $header = ['No', 'Nama Usaha', 'Pemilik', 'Wilayah', 'RW', 'RT', 'Produk', 'Kontak HP', 'Tanggal Input'];
+        // 1. Tulis Baris Judul (Tambah Kolom Kategori)
+        $header = ['No', 'Kategori', 'Nama Usaha', 'Pemilik', 'Wilayah', 'RW', 'RT', 'Produk', 'Kontak HP', 'Tanggal Input'];
         fputcsv($file, $header);
 
-        // 2. Tulis Isi Data (Looping)
+        // 2. Tulis Isi Data
         foreach ($umkm as $key => $row) {
             $data = [
                 $key + 1,
+                $row['kategori'], // <--- TAMBAHAN EXPORT KATEGORI
                 $row['nama_usaha'],
                 $row['pemilik'],
                 $row['nama_wilayah'],
                 $row['rw'],
-                'RT ' . $row['rt'], // Tambah teks RT biar rapi
+                'RT ' . $row['rt'], 
                 $row['produk'],
-                "'" . $row['kontak_hp'], // Trik: Kasih tanda kutip biar Excel baca sebagai Teks
+                "'" . $row['kontak_hp'], // Trik biar 0 tidak hilang di Excel
                 $row['created_at']
             ];
             fputcsv($file, $data);
         }
 
-        // Tutup pintu file & Matikan script
         fclose($file);
         exit;
     }

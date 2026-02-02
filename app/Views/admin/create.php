@@ -24,7 +24,6 @@
   </head>
   <body class="bg-light">
 
-    <!-- Navbar -->
     <nav class="navbar navbar-dark mb-4 shadow-sm" style="background: linear-gradient(90deg, #2C3E50, #4CA1AF);">
       <div class="container">
         <a class="navbar-brand fw-bold" href="<?= base_url('admin') ?>">
@@ -62,9 +61,28 @@
             <div class="mb-4">
               <label class="form-label required">Nama Usaha</label>
               <input type="text" name="nama_usaha" class="form-control" 
-                    required placeholder="Contoh: Keripik Tempe Bu Susi"
-                    value="<?= old('nama_usaha') ?>">
+                   required placeholder="Contoh: Keripik Tempe Bu Susi"
+                   value="<?= old('nama_usaha') ?>">
               <small class="text-muted">Masukkan nama usaha yang mudah diingat</small>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label required">Kategori Usaha (Bisa pilih lebih dari satu)</label>
+                <div class="card p-3 border-light bg-white">
+                    <div class="row">
+                        <?php 
+                        $cats = ['Kuliner', 'Fashion', 'Agrobisnis', 'Jasa', 'Kerajinan', 'Toko', 'Lainnya'];
+                        foreach($cats as $c): 
+                        ?>
+                        <div class="col-6 col-md-4 mb-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="kategori[]" value="<?= $c ?>" id="cat_<?= $c ?>">
+                                <label class="form-check-label" for="cat_<?= $c ?>"><?= $c ?></label>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
             </div>
 
             <div class="row">
