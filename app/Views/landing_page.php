@@ -429,12 +429,12 @@
                     <h6><i class="bi bi-building me-2"></i>Kantor Desa</h6>
                     <p class="small mb-2">
                         <i class="bi bi-geo-alt me-2"></i>
-                        Desa Candimulyo, Kec. Kedu<br>
-                        Kabupaten Temanggung, Jawa Tengah
+                        Pakisan, RT.02/RW.05 Candimulyo<br>
+                        Kec Kedu, Kabupaten Temanggung
                     </p>
                     <p class="small mb-0">
-                        <i class="bi bi-telephone me-2"></i>(0293) 123456<br>
-                        <i class="bi bi-envelope me-2"></i>candimulyo@temanggungkab.go.id
+                        <i class="bi bi-telephone me-2"></i> - <br>
+                        <i class="bi bi-envelope me-2"></i>candimulyo-kedu@temanggungkab.go.id
                     </p>
                 </div>
                 <div class="col-md-4">
