@@ -34,6 +34,15 @@
       </div>
     </nav>
 
+    <div class="container mt-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="<?= base_url('admin') ?>"><i class="bi bi-house-door"></i> Dashboard</a></li>
+                <li class="breadcrumb-item active"><i class="bi bi-plus-circle"></i> Tambah UMKM</li>
+            </ol>
+        </nav>
+    </div>
+    
     <div class="container mt-4 mb-5">
       <div class="card shadow-sm border-0">
         <div class="card-header bg-primary text-white">

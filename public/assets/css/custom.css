@@ -1,0 +1,254 @@
+/* ============================================
+   CUSTOM STYLES - UMKM CANDIMULYO
+   ============================================ */
+
+/* Global Typography & Spacing */
+body {
+    line-height: 1.7;
+    font-family: 'Poppins', sans-serif;
+}
+
+.card-body p {
+    margin-bottom: 0.75rem;
+}
+
+.btn {
+    letter-spacing: 0.3px;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* ============================================
+   CARD UMKM - SERAGAM & PROFESSIONAL
+   ============================================ */
+
+/* Container Gambar Seragam */
+.umkm-img-container {
+    width: 100%;
+    height: 220px; /* UKURAN TETAP */
+    overflow: hidden;
+    position: relative;
+    background: #f8f9fa;
+    border-radius: 8px 8px 0 0;
+}
+
+.umkm-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* CROP TENGAH, GA GEPENG */
+    object-position: center;
+    transition: transform 0.4s ease, filter 0.3s ease;
+}
+
+/* Hover Effect */
+.card-umkm {
+    transition: all 0.3s ease;
+    border: 1px solid #e0e0e0;
+}
+
+.card-umkm:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+    border-color: #4CA1AF;
+}
+
+.card-umkm:hover .umkm-img-container img {
+    transform: scale(1.08);
+    filter: brightness(1.05);
+}
+
+/* Badge Overlay */
+.category-badge-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+}
+
+.category-badge-container .badge {
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+    font-size: 0.7rem;
+    font-weight: 600;
+    backdrop-filter: blur(4px);
+}
+
+/* Badge "BARU" */
+.badge-new {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    font-weight: 700;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* ============================================
+   LIST VIEW - HORIZONTAL LAYOUT
+   ============================================ */
+
+.umkm-img-container-list {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 8px 0 0 8px;
+    background: #f8f9fa;
+}
+
+.umkm-img-container-list img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.4s ease;
+}
+
+.card-umkm:hover .umkm-img-container-list img {
+    transform: scale(1.05);
+}
+
+/* ============================================
+   MODAL DETAIL - GAMBAR UKURAN ASLI
+   ============================================ */
+
+#modalDetail .modal-body img {
+    max-height: 70vh;
+    width: 100%;
+    object-fit: contain; /* TAMPIL FULL, GA DI-CROP */
+    object-position: center;
+    border-radius: 8px;
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    animation: fadeIn 0.5s ease;
+}
+
+.empty-state img {
+    width: 140px;
+    opacity: 0.3;
+    margin-bottom: 1.5rem;
+    filter: grayscale(100%);
+}
+
+.empty-state h5 {
+    color: #6c757d;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+    color: #adb5bd;
+    font-size: 0.9rem;
+}
+
+/* ============================================
+   FADE IN ANIMATION
+   ============================================ */
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.card-umkm {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.card-umkm:nth-child(1) { animation-delay: 0s; }
+.card-umkm:nth-child(2) { animation-delay: 0.1s; }
+.card-umkm:nth-child(3) { animation-delay: 0.15s; }
+.card-umkm:nth-child(4) { animation-delay: 0.2s; }
+.card-umkm:nth-child(5) { animation-delay: 0.25s; }
+.card-umkm:nth-child(6) { animation-delay: 0.3s; }
+
+/* ============================================
+   SEARCH BOX HERO
+   ============================================ */
+
+.search-box-hero {
+    border-radius: 15px;
+    background: rgba(255,255,255,0.97);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    backdrop-filter: blur(10px);
+}
+
+/* ============================================
+   ADMIN AREA
+   ============================================ */
+
+.umkm-card-mobile {
+    border-left: 4px solid #4CA1AF;
+    transition: all 0.3s;
+}
+
+.umkm-card-mobile:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transform: translateX(4px);
+}
+
+/* ============================================
+   BREADCRUMB
+   ============================================ */
+
+.breadcrumb {
+    background: transparent;
+    padding: 0.5rem 0;
+    margin-bottom: 1rem;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    content: "›";
+    font-size: 1.2rem;
+    color: #6c757d;
+}
+
+.breadcrumb-item a {
+    color: #4CA1AF;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.breadcrumb-item a:hover {
+    color: #2C3E50;
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================ */
+
+@media (max-width: 576px) {
+    .umkm-img-container {
+        height: 180px;
+    }
+    
+    .umkm-img-container-list {
+        height: 150px;
+        border-radius: 8px 8px 0 0;
+    }
+    
+    .category-badge-container .badge {
+        font-size: 0.65rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .umkm-img-container {
+        height: 240px;
+    }
+}

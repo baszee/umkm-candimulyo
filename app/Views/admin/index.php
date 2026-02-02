@@ -37,7 +37,6 @@
   </head>
   <body class="bg-light">
 
-    <!-- Toast Notification -->
     <div class="toast-container">
       <div class="toast align-items-center text-white bg-success border-0" role="alert" id="successToast">
         <div class="d-flex">
@@ -71,9 +70,18 @@
       </div>
     </nav>
 
+    <div class="container mb-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active text-primary fw-bold">
+                    <i class="bi bi-house-door-fill me-1"></i> Dashboard
+                </li>
+            </ol>
+        </nav>
+    </div>
+
     <div class="container mb-5">
 
-      <!-- Dashboard Stats -->
       <div class="row mb-4 g-3">
         <div class="col-12 col-md-6">
             <div class="card text-white bg-primary bg-gradient shadow-sm h-100 border-0">
@@ -106,21 +114,20 @@
         </div>
       </div>
 
-      <!-- Table/Card Header -->
       <div class="card shadow-sm border-0">
         <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center flex-wrap gap-3">
           <h5 class="mb-0 fw-bold text-primary">
               <i class="bi bi-table me-2"></i>Data UMKM
           </h5>
           <div class="d-flex gap-2 flex-wrap">
-              <a href="<?= base_url('admin/export') ?>" class="btn btn-sm btn-outline-success shadow-sm">
+              <a href="<?= base_url('admin/export') ?>" class="btn btn-sm btn-success shadow-sm">
                 <i class="bi bi-file-earmark-excel-fill"></i>
                 <span class="d-none d-sm-inline ms-1">Export Excel</span>
               </a>
               
               <a href="<?= base_url('admin/create') ?>" class="btn btn-sm btn-primary shadow-sm">
                 <i class="bi bi-plus-circle me-1"></i>
-                <span class="d-none d-sm-inline">Tambah UMKM</span>
+                <span class="d-none d-sm-inline ms-1">Tambah UMKM</span>
                 <span class="d-sm-none">Tambah</span>
               </a>
           </div>
@@ -128,7 +135,6 @@
         
         <div class="card-body p-0">
           
-          <!-- MOBILE VIEW: Card Layout (HP & Small Tablet) -->
           <div class="d-md-none p-3">
               <?php if(empty($umkm)): ?>
                   <div class="text-center py-5 text-muted">
@@ -142,6 +148,9 @@
                               <div class="d-flex justify-content-between align-items-start mb-2">
                                   <div class="flex-grow-1">
                                       <h6 class="fw-bold text-dark mb-1"><?= esc($row['nama_usaha']) ?></h6>
+                                      <span class="badge bg-secondary mb-2" style="font-size: 0.7rem;">
+                                          <?= esc($row['kategori']) ?>
+                                      </span>
                                       <p class="text-muted small mb-2">
                                           <i class="bi bi-person me-1"></i><?= esc($row['pemilik']) ?>
                                       </p>
@@ -190,24 +199,24 @@
               <?php endif; ?>
           </div>
 
-          <!-- DESKTOP VIEW: Table Layout (Tablet & Desktop) -->
           <div class="table-responsive d-none d-md-block">
             <table class="table table-hover align-middle mb-0">
               <thead class="table-light text-center">
                 <tr>
                   <th width="5%">No</th>
-                  <th width="25%">Nama Usaha</th>
-                  <th width="20%">Pemilik</th>
+                  <th width="20%">Nama Usaha</th>
+                  <th width="15%">Kategori</th>
+                  <th width="15%">Pemilik</th>
                   <th width="15%">Wilayah</th>
                   <th width="10%">RT</th>
-                  <th width="25%">Aksi</th>
+                  <th width="20%">Aksi</th>
                 </tr>
               </thead>
               <tbody>
                 
                 <?php if(empty($umkm)): ?>
                     <tr>
-                        <td colspan="6" class="text-center text-muted py-5">
+                        <td colspan="7" class="text-center text-muted py-5">
                             <i class="bi bi-inbox fs-1 d-block mb-3 opacity-25"></i>
                             <em>Belum ada data UMKM. Silakan klik tombol Tambah.</em>
                         </td>
@@ -222,8 +231,12 @@
                                 <strong class="text-dark"><?= esc($row['nama_usaha']) ?></strong>
                                 <br>
                                 <small class="text-muted fst-italic">
-                                    <?= strlen($row['produk']) > 50 ? substr(esc($row['produk']), 0, 50) . '...' : esc($row['produk']) ?>
+                                    <?= strlen($row['produk']) > 40 ? substr(esc($row['produk']), 0, 40) . '...' : esc($row['produk']) ?>
                                 </small>
+                            </td>
+
+                            <td class="text-center">
+                                <span class="badge bg-secondary"><?= esc($row['kategori']) ?></span>
                             </td>
                             
                             <td>

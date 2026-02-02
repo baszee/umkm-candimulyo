@@ -7,11 +7,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     
+    <!-- CUSTOM CSS -->
+    <link rel="stylesheet" href="<?= base_url('assets/css/custom.css') ?>">
+    
     <style>
-        /* Google Fonts */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
-        
-        body { font-family: 'Poppins', sans-serif; }
         
         .hero-section {
             background: linear-gradient(135deg, #2C3E50, #4CA1AF);
@@ -33,7 +33,6 @@
         
         .hero-section .container { position: relative; z-index: 1; }
         
-        /* Stats Counter */
         .stats-row {
             display: flex; justify-content: center; gap: 3rem; margin-top: 2rem; flex-wrap: wrap;
         }
@@ -41,25 +40,6 @@
         .stat-item h2 { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
         .stat-item p { font-size: 0.9rem; opacity: 0.9; margin: 0; }
         
-        /* Card UMKM */
-        .card-umkm {
-            cursor: pointer; transition: all 0.3s ease; border: 1px solid #e0e0e0; position: relative; overflow: hidden;
-        }
-        .card-umkm:hover { transform: translateY(-8px); box-shadow: 0 12px 24px rgba(0,0,0,0.15) !important; }
-        .card-umkm img { transition: transform 0.3s ease; }
-        .card-umkm:hover img { transform: scale(1.05); }
-        
-        /* Category Badge Container (Updated for Multi-Tags) */
-        .category-badge-container {
-            position: absolute; top: 10px; right: 10px; z-index: 2;
-            display: flex; flex-direction: column; align-items: flex-end; gap: 5px;
-        }
-        .category-badge-container .badge {
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            font-size: 0.7rem; font-weight: 600;
-        }
-        
-        /* Toast & Footer */
         .toast-container { position: fixed; top: 80px; right: 20px; z-index: 9999; }
         
         .footer {
@@ -69,9 +49,6 @@
         .footer a { color: #4CA1AF; text-decoration: none; transition: color 0.3s; }
         .footer a:hover { color: #6dbbc7; }
         .footer h6 { font-weight: 600; margin-bottom: 1rem; color: #4CA1AF; }
-        
-        .empty-state { text-align: center; padding: 4rem 2rem; }
-        .empty-state i { font-size: 5rem; color: #ddd; margin-bottom: 1rem; }
         
         html { scroll-behavior: smooth; }
         
@@ -129,7 +106,7 @@
                 </div>
             </div>
             
-            <div class="card shadow-lg border-0 p-3 mx-auto mt-4" style="max-width: 900px;">
+            <div class="card search-box-hero p-4 mx-auto mt-4" style="max-width: 900px;">
                 <form action="" method="get">
                     <input type="hidden" name="view" value="<?= $viewMode ?>">
                     <div class="row g-3">
@@ -205,44 +182,52 @@
 
         <?php if(empty($umkm)): ?>
             <div class="empty-state">
-                <i class="bi bi-inbox"></i>
-                <h4 class="text-muted mb-3">Tidak ada UMKM ditemukan</h4>
-                <p class="text-muted mb-4">Coba ubah kata kunci pencarian atau reset filter</p>
-                <a href="<?= base_url() ?>" class="btn btn-primary"><i class="bi bi-arrow-counterclockwise me-2"></i>Tampilkan Semua</a>
+                <img src="https://cdn-icons-png.flaticon.com/512/4076/4076549.png" alt="Empty Data">
+                <h5>Tidak ada UMKM ditemukan</h5>
+                <p>Coba ubah kata kunci pencarian atau reset filter</p>
+                <a href="<?= base_url() ?>" class="btn btn-primary mt-3">
+                    <i class="bi bi-arrow-counterclockwise me-2"></i>Tampilkan Semua
+                </a>
             </div>
         <?php else: ?>
             <div class="row <?= ($viewMode == 'grid') ? 'row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 g-4' : 'row-cols-1 g-3' ?>">
                 <?php foreach($umkm as $row): ?>
                     <?php 
-                        $foto = $row['foto_umkm'] ? 'uploads/umkm/'.$row['foto_umkm'] : 'https://placehold.co/600x400?text=No+Image';
+                        $foto = $row['foto_umkm'] ? 'uploads/umkm/'.$row['foto_umkm'] : 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"%3E%3Crect fill="%23e9ecef" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" fill="%23adb5bd" font-size="20" font-family="Arial"%3ENo Image%3C/text%3E%3C/svg%3E';
                         
-                        // Warna Badge
                         $colors = [
                             'Kuliner' => 'danger', 'Fashion' => 'info', 'Agrobisnis' => 'success', 
                             'Jasa' => 'primary', 'Kerajinan' => 'warning', 'Toko' => 'secondary'
                         ];
                         
-                        // Pecah string "Kategori, Kategori" menjadi array
                         $katString = $row['kategori'] ?? 'Lainnya';
                         $kategoriList = explode(', ', $katString);
+                        
+                        // CEK UMKM BARU (7 HARI TERAKHIR)
+                        $isNew = strtotime($row['created_at']) > strtotime('-7 days');
                     ?>
                     <div class="col">
                         <div class="card h-100 card-umkm shadow-sm border-0" onclick="bukaPopup(<?= $row['id_umkm'] ?>)">
                             <?php if($viewMode == 'grid'): ?>
-                                <div style="position: relative; overflow: hidden;">
-                                    <img src="<?= base_url($foto) ?>" class="card-img-top" style="height: 200px; object-fit: cover;">
+                                <div class="umkm-img-container">
+                                    <img src="<?= base_url($foto) ?>" alt="<?= esc($row['nama_usaha']) ?>">
                                     
                                     <div class="category-badge-container">
+                                        <?php if($isNew): ?>
+                                            <span class="badge badge-new">
+                                                <i class="bi bi-star-fill"></i> BARU
+                                            </span>
+                                        <?php endif; ?>
+                                        
                                         <?php foreach($kategoriList as $kat): 
                                             $badgeColor = $colors[$kat] ?? 'secondary';
                                         ?>
                                             <span class="badge bg-<?= $badgeColor ?>"><?= esc($kat) ?></span>
                                         <?php endforeach; ?>
                                     </div>
-
                                 </div>
                                 <div class="card-body">
-                                    <h5 class="card-title fw-bold text-dark mb-2"><?= esc($row['nama_usaha']) ?></h5>
+                                    <h5 class="card-title fw-bold text-dark mb-2" style="line-height: 1.4;"><?= esc($row['nama_usaha']) ?></h5>
                                     <p class="card-text text-muted small mb-2"><i class="bi bi-person me-1"></i><?= esc($row['pemilik']) ?></p>
                                     <p class="card-text">
                                         <span class="badge bg-light text-dark border"><i class="bi bi-geo-alt"></i> <?= esc($row['nama_wilayah']) ?></span>
@@ -251,17 +236,22 @@
                             <?php else: ?>
                                 <div class="row g-0">
                                     <div class="col-md-4">
-                                        <div style="position: relative; overflow: hidden; height: 100%;">
-                                            <img src="<?= base_url($foto) ?>" class="img-fluid rounded-start h-100" style="object-fit: cover; min-height: 180px;">
+                                        <div class="umkm-img-container-list">
+                                            <img src="<?= base_url($foto) ?>" alt="<?= esc($row['nama_usaha']) ?>">
                                             
                                             <div class="category-badge-container">
+                                                <?php if($isNew): ?>
+                                                    <span class="badge badge-new">
+                                                        <i class="bi bi-star-fill"></i> BARU
+                                                    </span>
+                                                <?php endif; ?>
+                                                
                                                 <?php foreach($kategoriList as $kat): 
                                                     $badgeColor = $colors[$kat] ?? 'secondary';
                                                 ?>
                                                     <span class="badge bg-<?= $badgeColor ?>"><?= esc($kat) ?></span>
                                                 <?php endforeach; ?>
                                             </div>
-
                                         </div>
                                     </div>
                                     <div class="col-md-8">
@@ -316,12 +306,13 @@
         </div>
     </footer>
 
+    <!-- MODAL DETAIL -->
     <div class="modal fade" id="modalDetail" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable"> 
         <div class="modal-content overflow-hidden border-0 shadow-lg rounded-4">
           <div class="row g-0">
-            <div class="col-lg-5 bg-dark d-flex align-items-center justify-content-center p-3" style="min-height: 300px; max-height: 80vh;">
-                <img src="" id="popupFoto" class="img-fluid rounded" style="max-height: 70vh; width: 100%; object-fit: contain;">
+            <div class="col-lg-5 bg-dark d-flex align-items-center justify-content-center p-3" style="min-height: 300px;">
+                <img src="" id="popupFoto" class="img-fluid rounded" style="max-height: 70vh; object-fit: contain;">
             </div>
             <div class="col-lg-7 d-flex flex-column bg-white">
                 <div class="modal-header border-bottom-0 pb-2">
@@ -365,7 +356,7 @@
         function bukaPopup(id) {
             const myModal = new bootstrap.Modal(document.getElementById('modalDetail'));
             document.getElementById('popupJudul').innerText = "Memuat...";
-            document.getElementById('popupFoto').src = "https://placehold.co/800x600?text=Loading..."; 
+            document.getElementById('popupFoto').src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect fill='%23e9ecef' width='400' height='300'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='%23adb5bd' font-size='18'%3ELoading...%3C/text%3E%3C/svg%3E"; 
             myModal.show();
 
             fetch(BASE_URL + '/get-umkm/' + id)
@@ -377,9 +368,8 @@
                     document.getElementById('popupRT').innerText = "RT " + data.rt;
                     document.getElementById('popupDeskripsi').innerText = data.produk || 'Belum ada deskripsi';
 
-                    // Update Badge Kategori (Multi-Support)
                     let katString = data.kategori || 'Lainnya';
-                    let kategoriList = katString.split(', '); // Pecah jadi array
+                    let kategoriList = katString.split(', ');
                     
                     let colors = {'Kuliner':'danger', 'Fashion':'info', 'Agrobisnis':'success', 'Jasa':'primary', 'Kerajinan':'warning', 'Toko':'secondary'};
                     
@@ -389,12 +379,11 @@
                         badgesHtml += `<span class="badge bg-${color} me-2">${kat}</span>`;
                     });
                     
-                    // Tambah badge RW di akhir
                     badgesHtml += `<span class="badge bg-light text-dark border">RW ${data.rw}</span>`;
                     
                     document.getElementById('popupBadges').innerHTML = badgesHtml;
 
-                    let fotoUrl = data.foto_umkm ? BASE_URL + '/uploads/umkm/' + data.foto_umkm : 'https://placehold.co/600x600?text=No+Image';
+                    let fotoUrl = data.foto_umkm ? BASE_URL + '/uploads/umkm/' + data.foto_umkm : 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600"%3E%3Crect fill="%23e9ecef" width="600" height="600"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" fill="%23adb5bd" font-size="24"%3ENo Image%3C/text%3E%3C/svg%3E';
                     document.getElementById('popupFoto').src = fotoUrl;
 
                     if(data.kontak_hp) {
