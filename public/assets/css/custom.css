@@ -48,6 +48,7 @@ body {
 .card-umkm {
     transition: all 0.3s ease;
     border: 1px solid #e0e0e0;
+    cursor: pointer;
 }
 
 .card-umkm:hover {
@@ -80,19 +81,6 @@ body {
     backdrop-filter: blur(4px);
 }
 
-/* Badge "BARU" */
-.badge-new {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    color: white;
-    font-weight: 700;
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-}
-
 /* ============================================
    LIST VIEW - HORIZONTAL LAYOUT
    ============================================ */
@@ -118,11 +106,36 @@ body {
 }
 
 /* ============================================
-   MODAL DETAIL - GAMBAR UKURAN ASLI
+   MODAL DETAIL - BISA SCROLL DI MOBILE
    ============================================ */
 
+/* Fix: Modal bisa scroll di mobile */
+.modal-dialog-fullscreen-md-down {
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .modal-dialog-fullscreen-md-down {
+        max-width: 100%;
+        margin: 0;
+        height: 100%;
+    }
+    
+    .modal-dialog-fullscreen-md-down .modal-content {
+        height: 100%;
+        border-radius: 0;
+    }
+    
+    .modal-dialog-fullscreen-md-down .modal-body {
+        max-height: calc(100vh - 60px) !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* Gambar di modal - tampil penuh */
 #modalDetail .modal-body img {
-    max-height: 70vh;
+    max-height: 60vh;
     width: 100%;
     object-fit: contain; /* TAMPIL FULL, GA DI-CROP */
     object-position: center;
