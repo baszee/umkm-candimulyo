@@ -15,7 +15,7 @@ class Home extends BaseController
         // Ambil Parameter Filter
         $keyword = $this->request->getGet('cari');
         $filterWilayah = $this->request->getGet('wilayah');
-        $filterKategori = $this->request->getGet('kategori'); // <--- BARU
+        $filterKategori = $this->request->getGet('kategori');
         $viewMode = $this->request->getGet('view') ? $this->request->getGet('view') : 'grid';
 
         // Query Data
@@ -33,21 +33,25 @@ class Home extends BaseController
             $builder->where('tb_umkm.id_wilayah', $filterWilayah);
         }
 
-        // LOGIKA FILTER KATEGORI BARU
-       if ($filterKategori) {
-        // Pakai LIKE agar pencarian "Jasa" tetap menemukan "Kuliner, Jasa"
+        if ($filterKategori) {
             $builder->like('tb_umkm.kategori', $filterKategori);
         }
 
-        $umkm = $builder->orderBy('tb_umkm.created_at', 'DESC')->findAll();
+        // PAGINATION (12 item per halaman)
+        $perPage = 12;
+        $umkm = $builder->orderBy('tb_umkm.created_at', 'DESC')
+                       ->paginate($perPage, 'default');
+        
+        $pager = $umkmModel->pager;
 
         $data = [
             'title'           => 'Portal UMKM Desa Candimulyo',
             'umkm'            => $umkm,
+            'pager'           => $pager,
             'list_wilayah'    => $wilayahModel->findAll(),
             'keyword'         => $keyword,
             'selectedWilayah' => $filterWilayah,
-            'selectedKategori'=> $filterKategori, // <--- Kirim balik ke view
+            'selectedKategori'=> $filterKategori,
             'viewMode'        => $viewMode
         ];
 

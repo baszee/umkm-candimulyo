@@ -39,6 +39,67 @@ class Admin extends BaseController
         return true;
     }
 
+    /**
+     * Fungsi Helper: Bersihkan dan Validasi Nomor HP
+     * @return string|false Nomor HP yang sudah dibersihkan, atau false jika tidak valid
+     */
+    private function cleanPhoneNumber($hp)
+    {
+        // Jika kosong, return string kosong (opsional)
+        if (empty($hp)) {
+            return '';
+        }
+        
+        // STEP 1: Hapus semua karakter kecuali angka dan tanda +
+        $hp = preg_replace('/[^0-9+]/', '', $hp);
+        
+        // STEP 2: Hapus tanda + jika ada
+        $hp = str_replace('+', '', $hp);
+        
+        // STEP 3: Konversi ke format 62
+        if (substr($hp, 0, 1) === '0') {
+            // 08xxx -> 628xxx
+            $hp = '62' . substr($hp, 1);
+        } elseif (substr($hp, 0, 1) === '8') {
+            // 8xxx -> 628xxx
+            $hp = '62' . $hp;
+        } elseif (substr($hp, 0, 2) !== '62') {
+            // Jika tidak dimulai dengan 0, 8, atau 62 -> Invalid
+            return false;
+        }
+        
+        // STEP 4: Validasi panjang (nomor Indonesia: 12-15 digit setelah jadi 62xxx)
+        if (strlen($hp) < 12 || strlen($hp) > 15) {
+            return false;
+        }
+        
+        return $hp;
+    }
+
+    /**
+     * Fungsi Helper: Resize dan Kompres Gambar
+     */
+    private function optimizeImage($file, $fileName, $maxWidth = 800, $quality = 80)
+    {
+        $image = \Config\Services::image();
+        
+        $uploadPath = 'uploads/umkm/' . $fileName;
+        
+        try {
+            $image->withFile($file)
+                  ->resize($maxWidth, $maxWidth, true, 'height')
+                  ->save($uploadPath, $quality);
+            
+            return true;
+        } catch (\Exception $e) {
+            log_message('error', 'Image optimization failed: ' . $e->getMessage());
+            
+            // Fallback: pindahkan file tanpa optimasi
+            $file->move('uploads/umkm', $fileName);
+            return false;
+        }
+    }
+
     // Halaman Utama Admin (Tabel)
     public function index()
     {
@@ -71,30 +132,13 @@ class Admin extends BaseController
     {
         $umkmModel = new UmkmModel();
 
-        // 1. STANDARDISASI NOMOR HP (Auto 62)
+        // 1. STANDARDISASI NOMOR HP
         $hp = $this->request->getPost('kontak_hp');
-
-        // Jika HP kosong, boleh (opsional)
-        if (empty($hp)) {
-            $hp = '';
-        } else {
-            // Hapus karakter aneh (spasi, strip, plus), sisakan angka
-            $hp = preg_replace('/[^0-9]/', '', $hp);
-            
-            // Kalau diawali 0, ganti jadi 62. Kalau 8, tambah 62 di depan.
-            if (substr($hp, 0, 1) === '0') {
-                $hp = '62' . substr($hp, 1);
-            } elseif (substr($hp, 0, 1) === '8') {
-                $hp = '62' . $hp;
-            } elseif (substr($hp, 0, 2) !== '62') {
-                // Jika tidak dimulai 0, 8, atau 62 -> error
-                return redirect()->back()->withInput()->with('errors', ['Nomor HP harus dimulai dengan 0, 8, atau 62']);
-            }
-            
-            // Validasi panjang (nomor Indonesia: 10-15 digit)
-            if (strlen($hp) < 10 || strlen($hp) > 15) {
-                return redirect()->back()->withInput()->with('errors', ['Nomor HP tidak valid (terlalu pendek/panjang)']);
-            }
+        $cleanedHP = $this->cleanPhoneNumber($hp);
+        
+        // Jika validasi gagal (return false), tampilkan error
+        if ($cleanedHP === false && !empty($hp)) {
+            return redirect()->back()->withInput()->with('errors', ['Nomor HP tidak valid. Gunakan format: 08xxx, 8xxx, atau 62xxx']);
         }
 
         // 2. STANDARDISASI NAMA FILE (Tanggal + Unik)
@@ -110,8 +154,8 @@ class Admin extends BaseController
             // Format: YYYYMMDD_jam_acak.ext
             $namaFoto = date('Ymd_His') . '_' . $fileFoto->getRandomName();
             
-            // Pindahkan file ke public/uploads/umkm
-            $fileFoto->move('uploads/umkm', $namaFoto);
+            // Optimasi gambar (resize max 800px, quality 80%)
+            $this->optimizeImage($fileFoto, $namaFoto, 800, 80);
         } else {
             $namaFoto = 'default.jpg';
         }
@@ -124,7 +168,7 @@ class Admin extends BaseController
             'id_wilayah' => $this->request->getPost('id_wilayah'),
             'rt'         => $this->request->getPost('rt'),
             'produk'     => $this->request->getPost('produk'),
-            'kontak_hp'  => $hp,
+            'kontak_hp'  => $cleanedHP,
             'foto_umkm'  => $namaFoto
         ]);
 
@@ -178,21 +222,10 @@ class Admin extends BaseController
 
         // 1. STANDARDISASI NOMOR HP
         $hp = $this->request->getPost('kontak_hp');
+        $cleanedHP = $this->cleanPhoneNumber($hp);
         
-        if (empty($hp)) {
-            $hp = '';
-        } else {
-            $hp = preg_replace('/[^0-9]/', '', $hp);
-            if (substr($hp, 0, 1) === '0') {
-                $hp = '62' . substr($hp, 1);
-            } elseif (substr($hp, 0, 1) === '8') {
-                $hp = '62' . $hp;
-            } elseif (substr($hp, 0, 2) !== '62') {
-                return redirect()->back()->withInput()->with('errors', ['Nomor HP harus dimulai dengan 0, 8, atau 62']);
-            }
-            if (strlen($hp) < 10 || strlen($hp) > 15) {
-                return redirect()->back()->withInput()->with('errors', ['Nomor HP tidak valid']);
-            }
+        if ($cleanedHP === false && !empty($hp)) {
+            return redirect()->back()->withInput()->with('errors', ['Nomor HP tidak valid. Gunakan format: 08xxx, 8xxx, atau 62xxx']);
         }
 
         // 2. LOGIK FOTO
@@ -207,7 +240,9 @@ class Admin extends BaseController
         if ($fileFoto && $fileFoto->isValid() && ! $fileFoto->hasMoved()) {
             // Kalau upload baru -> Generate nama baru & Pindahkan
             $namaFoto = date('Ymd_His') . '_' . $fileFoto->getRandomName();
-            $fileFoto->move('uploads/umkm', $namaFoto);
+            
+            // Optimasi gambar
+            $this->optimizeImage($fileFoto, $namaFoto, 800, 80);
             
             // Hapus foto lama jika bukan default
             $umkmLama = $umkmModel->find($id);
@@ -233,7 +268,7 @@ class Admin extends BaseController
             'id_wilayah' => $this->request->getPost('id_wilayah'),
             'rt'         => $this->request->getPost('rt'),
             'produk'     => $this->request->getPost('produk'),
-            'kontak_hp'  => $hp,
+            'kontak_hp'  => $cleanedHP,
             'foto_umkm'  => $namaFoto
         ]);
 
@@ -268,7 +303,7 @@ class Admin extends BaseController
         foreach ($umkm as $key => $row) {
             $data = [
                 $key + 1,
-                $row['kategori'], // <--- TAMBAHAN EXPORT KATEGORI
+                $row['kategori'],
                 $row['nama_usaha'],
                 $row['pemilik'],
                 $row['nama_wilayah'],
