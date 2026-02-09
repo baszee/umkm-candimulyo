@@ -16,7 +16,7 @@
         .hero-section {
             background: linear-gradient(135deg, #2C3E50, #4CA1AF);
             color: white;
-            padding: 120px 0 60px;
+            padding: 140px 0 60px;
             border-bottom-left-radius: 50% 20px;
             border-bottom-right-radius: 50% 20px;
             position: relative;
@@ -40,7 +40,7 @@
         .stat-item h2 { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
         .stat-item p { font-size: 0.9rem; opacity: 0.9; margin: 0; }
         
-        .toast-container { position: fixed; top: 80px; right: 20px; z-index: 9999; }
+        .toast-container { position: fixed; top: 100px; right: 20px; z-index: 9999; }
         
         .footer {
             background: linear-gradient(135deg, #2C3E50, #34495e);
@@ -52,8 +52,13 @@
         
         html { scroll-behavior: smooth; }
         
+        /* Navbar Brand Custom */
+        .navbar-brand:hover {
+            opacity: 0.9;
+        }
+        
         @media (max-width: 576px) {
-            .hero-section { padding: 100px 0 40px; }
+            .hero-section { padding: 120px 0 40px; }
             .hero-section h1 { font-size: 1.75rem !important; }
             .stats-row { gap: 1.5rem; }
         }
@@ -72,24 +77,31 @@
       </div>
     </div>
 
+    <!-- NAVBAR HEADER -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top shadow-sm" style="background: linear-gradient(90deg, #2C3E50, #4CA1AF);">
       <div class="container">
-        <a class="navbar-brand fw-bold" href="<?= base_url() ?>">
-            <i class="bi bi-shop-window me-2"></i>UMKM Candimulyo
+        <a class="navbar-brand d-flex align-items-center" href="https://candimulyo-kedu.temanggungkab.go.id/frontend" target="_blank" title="Website Desa Candimulyo Kedu">
+            <img src="<?= base_url('assets/images/logo-temanggung.png') ?>" alt="Logo Kabupaten Temanggung" height="45" class="me-3">
+            <div class="d-flex flex-column lh-sm">
+                <span class="fw-bold text-white" style="font-size: 1.1rem;">Desa Candimulyo Kedu</span>
+                <small class="text-white-50" style="font-size: 0.75rem;">Kec. Kedu, Kab. Temanggung</small>
+            </div>
         </a>
-        <a href="<?= base_url('login') ?>" class="btn btn-outline-light btn-sm rounded-pill px-3 d-none d-md-inline-block">
-            <i class="bi bi-shield-lock me-1"></i> Admin
-        </a>
-        <a href="<?= base_url('login') ?>" class="btn btn-outline-light btn-sm rounded-circle d-md-none" title="Admin Area">
-            <i class="bi bi-shield-lock"></i>
-        </a>
+        <div class="d-flex gap-2">
+            <a href="https://candimulyo-kedu.temanggungkab.go.id/frontend" target="_blank" class="btn btn-outline-light btn-sm rounded-pill px-3 d-none d-md-inline-block">
+                <i class="bi bi-house-door me-1"></i> Web Desa
+            </a>
+            <a href="<?= base_url('login') ?>" class="btn btn-outline-light btn-sm rounded-pill px-3">
+                <i class="bi bi-shield-lock me-1"></i> <span class="d-none d-md-inline">Admin</span>
+            </a>
+        </div>
       </div>
     </nav>
 
     <header class="hero-section text-center">
         <div class="container">
             <h1 class="fw-bold mb-3" style="font-size: clamp(1.75rem, 4vw, 3rem);">
-                Potensi Lokal Desa Candimulyo
+                Portal UMKM Desa Candimulyo
             </h1>
             <p class="lead mb-4 opacity-90" style="font-size: clamp(1rem, 2vw, 1.25rem);">
                 Katalog Digital Produk & Jasa Unggulan Warga
@@ -274,34 +286,67 @@
         <?php endif; ?>
     </div>
 
+    <!-- FOOTER BARU -->
     <footer class="footer mt-auto">
         <div class="container">
             <div class="row g-4">
+                <!-- Kolom 1: Info Kontak -->
                 <div class="col-md-4">
-                    <h6><i class="bi bi-building me-2"></i>Kantor Desa</h6>
+                    <h6><i class="bi bi-building me-2"></i>Kantor Desa Candimulyo</h6>
                     <p class="small mb-2">
-                        <i class="bi bi-geo-alt me-2"></i>Pakisan, RT.02/RW.05 Candimulyo<br>Kec Kedu, Kabupaten Temanggung
+                        <i class="bi bi-geo-alt me-2"></i>Pakisan, RT.02/RW.05<br>
+                        <span class="ms-4">Desa Candimulyo Kedu</span><br>
+                        <span class="ms-4">Kec. Kedu, Kab. Temanggung</span>
                     </p>
-                    <p class="small mb-0">
+                    <p class="small mb-2">
                         <i class="bi bi-envelope me-2"></i>candimulyo-kedu@temanggungkab.go.id
                     </p>
+                    <p class="small mb-0">
+                        <i class="bi bi-telephone me-2"></i>Telp: -
+                    </p>
                 </div>
+
+                <!-- Kolom 2: Link Terkait -->
                 <div class="col-md-4">
                     <h6><i class="bi bi-link-45deg me-2"></i>Link Terkait</h6>
                     <ul class="list-unstyled small">
-                        <li class="mb-2"><a href="#"><i class="bi bi-globe me-2"></i>Website Desa Candimulyo</a></li>
-                        <li class="mb-2"><a href="<?= base_url('login') ?>"><i class="bi bi-shield-lock me-2"></i>Portal Admin</a></li>
+                        <li class="mb-2">
+                            <a href="https://candimulyo-kedu.temanggungkab.go.id/frontend" target="_blank">
+                                <i class="bi bi-globe me-2"></i>Website Desa Candimulyo
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="https://temanggungkab.go.id" target="_blank">
+                                <i class="bi bi-building me-2"></i>Website Kab. Temanggung
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="<?= base_url('login') ?>">
+                                <i class="bi bi-shield-lock me-2"></i>Portal Admin UMKM
+                            </a>
+                        </li>
                     </ul>
                 </div>
+
+                <!-- Kolom 3: Tentang Portal -->
                 <div class="col-md-4">
-                    <h6><i class="bi bi-info-circle me-2"></i>Tentang</h6>
-                    <p class="small">Sistem pendataan UMKM digital untuk memajukan ekonomi lokal Desa Candimulyo.</p>
-                    <p class="small mb-0"><i class="bi bi-people me-2"></i>Dibuat oleh <strong>KKN GIAT 15 UNNES 2026</strong></p>
+                    <h6><i class="bi bi-info-circle me-2"></i>Tentang Portal UMKM</h6>
+                    <p class="small">
+                        Sistem pendataan UMKM digital untuk memajukan ekonomi lokal Desa Candimulyo Kedu.
+                    </p>
+                    <p class="small mb-0">
+                        <i class="bi bi-people me-2"></i>Dibuat oleh <strong>KKN GIAT 15 UNNES 2026</strong>
+                    </p>
                 </div>
             </div>
+
             <hr class="my-3" style="border-color: rgba(255,255,255,0.1);">
+            
             <div class="text-center small opacity-75">
-                <p class="mb-0">&copy; <?= date('Y') ?> Portal UMKM Desa Candimulyo. Dikembangkan dengan <i class="bi bi-heart-fill text-danger"></i> untuk kemajuan desa.</p>
+                <p class="mb-0">
+                    &copy; <?= date('Y') ?> Portal UMKM Desa Candimulyo. 
+                    Dikembangkan dengan <i class="bi bi-heart-fill text-danger"></i> untuk kemajuan desa.
+                </p>
             </div>
         </div>
     </footer>
