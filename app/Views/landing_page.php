@@ -1,278 +1,180 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= esc($title) ?> - Portal UMKM Desa Candimulyo</title>
-    
-    <!-- Meta Tags untuk SEO -->
-    <meta name="description" content="Portal katalog UMKM Desa Candimulyo, Kecamatan Kedu, Kabupaten Temanggung. Temukan produk lokal dari pelaku usaha mikro kecil menengah di sekitar Anda.">
-    <meta name="keywords" content="UMKM Candimulyo, UMKM Temanggung, Produk Lokal Kedu, Usaha Desa Candimulyo">
-    <meta name="author" content="KKN UNNES Desa Candimulyo">
-    
-    <!-- Open Graph untuk Share di Media Sosial -->
-    <meta property="og:title" content="Portal UMKM Desa Candimulyo">
-    <meta property="og:description" content="Katalog UMKM Desa Candimulyo - Dukung Produk Lokal Temanggung">
-    <meta property="og:type" content="website">
-    
-    <!-- Bootstrap 5 CSS -->
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><?= $title ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    
+    <link rel="stylesheet" href="<?= base_url('assets/css/custom.css') ?>">
     
     <style>
-        * {
-            font-family: 'Poppins', sans-serif;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
         
         body {
-            padding-top: 80px;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
+            font-family: 'Poppins', sans-serif;
         }
-        
-        /* Navbar Responsiveness */
-        .navbar-collapse {
-            background: rgba(44, 62, 80, 0.95);
-            padding: 1rem;
-            border-radius: 0.5rem;
-            margin-top: 0.5rem;
-        }
-        
-        @media (min-width: 992px) {
-            .navbar-collapse {
-                background: transparent;
-                padding: 0;
-                margin-top: 0;
-            }
-        }
-        
-        .nav-link:hover {
-            color: #4CA1AF !important;
-            transform: translateY(-2px);
-            transition: all 0.3s;
-        }
-        
-        /* Hero Banner */
-        .hero-banner {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+        .hero-section {
+            background: linear-gradient(135deg, #2C3E50, #4CA1AF);
             color: white;
-            padding: 3rem 0;
-            margin-bottom: 2rem;
-            border-radius: 1rem;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-        }
-        
-        /* Search Box */
-        .search-box {
-            background: white;
-            border-radius: 1rem;
-            padding: 2rem;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-            margin-bottom: 2rem;
-        }
-        
-        /* Card UMKM */
-        .umkm-card {
-            border: none;
-            border-radius: 1rem;
+            padding: 140px 0 60px;
+            border-bottom-left-radius: 50% 20px;
+            border-bottom-right-radius: 50% 20px;
+            position: relative;
             overflow: hidden;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            height: 100%;
-            background: white;
         }
         
-        .umkm-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
         }
         
-        .umkm-card img {
-            height: 200px;
-            object-fit: cover;
-            width: 100%;
+        .hero-section .container { position: relative; z-index: 1; }
+        
+        .stats-row {
+            display: flex; justify-content: center; gap: 3rem; margin-top: 2rem; flex-wrap: wrap;
+        }
+        .stat-item { text-align: center; padding: 1rem; }
+        .stat-item h2 { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+        .stat-item p { font-size: 0.9rem; opacity: 0.9; margin: 0; }
+        
+        .toast-container { position: fixed; top: 100px; right: 20px; z-index: 9999; }
+        
+        .footer {
+            background: linear-gradient(135deg, #2C3E50, #34495e);
+            color: white; padding: 3rem 0 1rem; margin-top: 4rem;
+        }
+        .footer a { color: #4CA1AF; text-decoration: none; transition: color 0.3s; }
+        .footer a:hover { color: #6dbbc7; }
+        .footer h6 { font-weight: 600; margin-bottom: 1rem; color: #4CA1AF; }
+        
+        html { scroll-behavior: smooth; }
+        
+        .navbar-brand:hover {
+            opacity: 0.9;
         }
         
-        .umkm-card .card-body {
-            padding: 1.25rem;
+        /* NAVBAR CUSTOM UNTUK MOBILE */
+        .navbar-toggler {
+            border: none;
+            outline: none;
         }
-        
-        .kategori-badge {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 500;
+        .navbar-toggler:focus {
+            box-shadow: none;
         }
-        
-        /* List View */
-        .umkm-list-item {
-            background: white;
-            border-radius: 1rem;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-            transition: all 0.3s;
-        }
-        
-        .umkm-list-item:hover {
-            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-            transform: translateX(5px);
-        }
-        
-        .umkm-list-item img {
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 0.75rem;
-        }
-        
-        /* Pagination Custom */
-        .pagination {
-            gap: 0.5rem;
-        }
-        
-        .pagination .page-link {
-            border-radius: 0.5rem;
-            border: 2px solid #e0e0e0;
-            color: #667eea;
+        .nav-link {
             font-weight: 500;
             padding: 0.5rem 1rem;
-            transition: all 0.3s;
+        }
+        .nav-link:hover {
+            color: #ffc107 !important;
         }
         
-        .pagination .page-link:hover {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-color: #667eea;
-            transform: scale(1.05);
-        }
-        
-        .pagination .page-item.active .page-link {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-color: #667eea;
-        }
-        
-        /* Filter Badge */
-        .filter-badge {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            display: inline-flex;
+        /* LOADING OVERLAY */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.3);
+            z-index: 1000;
             align-items: center;
-            gap: 0.5rem;
-            margin: 0.25rem;
-            animation: slideInDown 0.3s ease;
+            justify-content: center;
         }
         
-        @keyframes slideInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .loading-overlay.active {
+            display: flex;
         }
         
-        .filter-badge .btn-close {
-            filter: brightness(0) invert(1);
-            opacity: 0.8;
+        .spinner-border-custom {
+            width: 3rem; height: 3rem;
+            border: 0.3em solid rgba(255,255,255,0.3);
+            border-top-color: #4CA1AF;
         }
         
-        /* Footer */
-        footer {
-            background: linear-gradient(90deg, #2C3E50, #4CA1AF);
-            color: white;
-            padding: 2rem 0;
-            margin-top: 3rem;
+        /* FADE IN ANIMATION FOR CARDS */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
-        footer a {
-            color: #a8dadc;
-            text-decoration: none;
-            transition: color 0.3s;
+        .card-umkm {
+            animation: fadeInUp 0.4s ease-out;
         }
         
-        footer a:hover {
-            color: white;
+        /* SEARCH BOX HERO */
+        .search-box-hero {
+            border-radius: 15px;
+            background: rgba(255,255,255,0.97);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            backdrop-filter: blur(10px);
+        }
+
+        /* CARD STYLE UNTUK JS */
+        .umkm-img-container {
+            width: 100%; height: 220px; overflow: hidden; position: relative; background: #f8f9fa; border-radius: 8px 8px 0 0;
+        }
+        .umkm-img-container img {
+            width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;
+        }
+        .card-umkm:hover .umkm-img-container img { transform: scale(1.08); }
+        
+        .category-badge-container {
+            position: absolute; top: 10px; right: 10px; z-index: 10; display: flex; flex-direction: column; align-items: flex-end; gap: 5px;
         }
         
-        /* Modal Custom */
-        .modal-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 0.5rem 0.5rem 0 0;
+        .umkm-img-container-list {
+            width: 100%; height: 200px; overflow: hidden; border-radius: 8px 0 0 8px; background: #f8f9fa;
         }
-        
-        .modal-header .btn-close {
-            filter: brightness(0) invert(1);
+        .umkm-img-container-list img {
+            width: 100%; height: 100%; object-fit: cover;
         }
-        
-        /* Loading State */
-        .skeleton {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: loading 1.5s infinite;
-        }
-        
-        @keyframes loading {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-        
-        /* Responsive Adjustments */
+
         @media (max-width: 576px) {
-            .hero-banner h1 {
-                font-size: 1.75rem;
-            }
+            .hero-section { padding: 120px 0 40px; }
+            .hero-section h1 { font-size: 1.75rem !important; }
+            .stats-row { gap: 1.5rem; }
             
-            .umkm-card img {
-                height: 180px;
-            }
-            
-            .umkm-list-item img {
-                width: 100%;
-                height: 180px;
-                margin-bottom: 1rem;
-            }
+            .umkm-img-container { height: 180px; }
+            .umkm-img-container-list { height: 150px; border-radius: 8px 8px 0 0; }
         }
     </style>
-</head>
-<body>
+  </head>
+  <body class="bg-light d-flex flex-column min-vh-100">
 
-    <!-- NAVBAR HEADER -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner-border spinner-border-custom" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top shadow-sm" style="background: linear-gradient(90deg, #2C3E50, #4CA1AF);">
       <div class="container">
-        <a class="navbar-brand d-flex align-items-center" href="<?= base_url() ?>" title="Portal UMKM Desa Candimulyo">
-            <img src="<?= base_url('assets/images/logo-temanggung.png') ?>" alt="Logo Kabupaten Temanggung" height="45" class="me-2 me-md-3">
+        <a class="navbar-brand d-flex align-items-center" href="<?= base_url() ?>">
+            <img src="<?= base_url('assets/images/logo-temanggung.png') ?>" alt="Logo" height="45" class="me-3">
             <div class="d-flex flex-column lh-sm">
-                <span class="fw-bold text-white" style="font-size: clamp(0.9rem, 2.5vw, 1.1rem);">Desa Candimulyo Kedu</span>
-                <small class="text-white-50" style="font-size: 0.7rem;">Kec. Kedu, Kab. Temanggung</small>
+                <span class="fw-bold text-white" style="font-size: 1.1rem;">Desa Candimulyo Kedu</span>
+                <small class="text-white-50" style="font-size: 0.75rem;">Kec. Kedu, Kab. Temanggung</small>
             </div>
         </a>
-        
-        <!-- Tombol Hamburger untuk Mobile -->
-        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        
-        <!-- Menu Navigasi -->
-        <div class="collapse navbar-collapse" id="navbarNav">
+
+        <div class="collapse navbar-collapse" id="navbarContent">
             <ul class="navbar-nav ms-auto align-items-lg-center gap-2 mt-3 mt-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="<?= base_url() ?>">
+                    <a class="nav-link text-white active" href="<?= base_url() ?>">
                         <i class="bi bi-house-door me-1"></i> Beranda
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="#tentang" data-bs-toggle="modal" data-bs-target="#modalTentang">
+                    <a class="nav-link text-white" href="#" data-bs-toggle="modal" data-bs-target="#modalTentang">
                         <i class="bi bi-info-circle me-1"></i> Tentang
                     </a>
                 </li>
@@ -282,13 +184,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="#caraPesan" data-bs-toggle="modal" data-bs-target="#modalCaraPesan">
+                    <a class="nav-link text-white" href="#" data-bs-toggle="modal" data-bs-target="#modalCaraPesan">
                         <i class="bi bi-cart-check me-1"></i> Cara Pesan
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="<?= base_url('login') ?>" class="btn btn-outline-light btn-sm rounded-pill px-3">
-                        <i class="bi bi-shield-lock me-1"></i> Admin
                     </a>
                 </li>
             </ul>
@@ -296,318 +193,277 @@
       </div>
     </nav>
 
-    <div class="container mt-4">
-        
-        <!-- HERO BANNER -->
-        <div class="hero-banner text-center">
-            <h1 class="fw-bold mb-3">
-                <i class="bi bi-shop-window me-2"></i>
+    <header class="hero-section text-center">
+        <div class="container">
+            <h1 class="fw-bold mb-3" style="font-size: clamp(1.75rem, 4vw, 3rem);">
                 Portal UMKM Desa Candimulyo
             </h1>
-            <p class="lead mb-0">Dukung Produk Lokal, Wujudkan Desa Mandiri 🌾</p>
-            <p class="text-white-50 mb-0 mt-2">
-                <i class="bi bi-geo-alt-fill me-1"></i>
-                Kecamatan Kedu, Kabupaten Temanggung, Jawa Tengah
+            <p class="lead mb-4 opacity-90" style="font-size: clamp(1rem, 2vw, 1.25rem);">
+                Katalog Digital Produk & Jasa Unggulan Warga
             </p>
-        </div>
-
-        <!-- SEARCH & FILTER BOX -->
-        <div class="search-box">
-            <form method="GET" action="<?= base_url() ?>" id="filterForm">
-                <div class="row g-3 align-items-end">
-                    <!-- Pencarian Keyword -->
-                    <div class="col-md-4">
-                        <label class="form-label fw-semibold">
-                            <i class="bi bi-search me-1"></i> Cari Usaha / Produk
-                        </label>
-                        <input type="text" 
-                               name="cari" 
-                               class="form-control" 
-                               placeholder="Contoh: Catering, Baju, Keripik..." 
-                               value="<?= esc($keyword ?? '') ?>">
+            
+            <div class="stats-row">
+                <div class="stat-item">
+                    <h2 class="text-warning" id="totalUmkmStat"><?= count($umkm) ?>+</h2>
+                    <p>UMKM Terdaftar</p>
+                </div>
+                <div class="stat-item">
+                    <h2 class="text-info"><?= isset($list_wilayah) ? count($list_wilayah) : 0 ?></h2>
+                    <p>Dusun Tercover</p>
+                </div>
+            </div>
+            
+            <div class="card search-box-hero p-4 mx-auto mt-4" style="max-width: 900px;">
+                <div class="row g-3">
+                    <div class="col-12 col-md-4">
+                        <input type="text" id="searchInput" class="form-control" 
+                            placeholder="Cari produk..." value="<?= esc($keyword ?? '') ?>">
                     </div>
-
-                    <!-- Filter Wilayah -->
-                    <div class="col-md-3">
-                        <label class="form-label fw-semibold">
-                            <i class="bi bi-geo-fill me-1"></i> Wilayah
-                        </label>
-                        <select name="wilayah" class="form-select">
-                            <option value="">Semua Wilayah</option>
-                            <?php foreach ($list_wilayah as $wil): ?>
-                                <option value="<?= $wil['id_wilayah'] ?>" 
-                                    <?= ($selectedWilayah == $wil['id_wilayah']) ? 'selected' : '' ?>>
-                                    <?= esc($wil['nama_wilayah']) ?> (RW <?= $wil['rw'] ?>)
+                    <div class="col-12 col-md-3">
+                        <select id="wilayahFilter" class="form-select">
+                            <option value="">- Semua Wilayah -</option>
+                            <?php if(isset($list_wilayah)): foreach($list_wilayah as $w): ?>
+                                <option value="<?= $w['id_wilayah'] ?>" <?= (isset($selectedWilayah) && $selectedWilayah == $w['id_wilayah']) ? 'selected' : '' ?>>
+                                    <?= $w['nama_wilayah'] ?>
                                 </option>
+                            <?php endforeach; endif; ?>
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <select id="kategoriFilter" class="form-select">
+                            <option value="">- Semua Kategori -</option>
+                            <?php 
+                            // PAKAI KATEGORI DARI CONSTANT (PERUBAHAN PERTAMA)
+                            foreach(KATEGORI_UMKM as $c): 
+                            ?>
+                                <option value="<?= $c ?>" <?= (isset($selectedKategori) && $selectedKategori == $c) ? 'selected' : '' ?>><?= $c ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
-
-                    <!-- Filter Kategori -->
-                    <div class="col-md-3">
-                        <label class="form-label fw-semibold">
-                            <i class="bi bi-tag-fill me-1"></i> Kategori
-                        </label>
-                        <select name="kategori" class="form-select">
-                            <option value="">Semua Kategori</option>
-                            <?php foreach (KATEGORI_UMKM as $kat): ?>
-                                <option value="<?= $kat ?>" <?= ($selectedKategori == $kat) ? 'selected' : '' ?>>
-                                    <?= $kat ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-
-                    <!-- Tombol Cari & Reset -->
-                    <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary w-100 mb-2">
-                            <i class="bi bi-funnel-fill me-1"></i> Filter
+                    <div class="col-12 col-md-2 d-grid">
+                        <button class="btn btn-primary bg-gradient fw-bold" onclick="applyFilter()">
+                            <i class="bi bi-search me-2"></i>Cari
                         </button>
-                        <?php if ($keyword || $selectedWilayah || $selectedKategori): ?>
-                            <a href="<?= base_url() ?>" class="btn btn-outline-secondary w-100 btn-sm">
-                                <i class="bi bi-arrow-clockwise me-1"></i> Reset
-                            </a>
-                        <?php endif; ?>
                     </div>
                 </div>
-            </form>
-
-            <!-- Active Filters Badge -->
-            <?php if ($keyword || $selectedWilayah || $selectedKategori): ?>
-                <div class="mt-3 pt-3 border-top">
-                    <small class="text-muted d-block mb-2">
-                        <i class="bi bi-funnel me-1"></i> Filter Aktif:
-                    </small>
-                    <?php if ($keyword): ?>
-                        <span class="filter-badge">
-                            <i class="bi bi-search"></i>
-                            Kata Kunci: "<?= esc($keyword) ?>"
-                            <button type="button" class="btn-close btn-close-sm" onclick="removeFilter('cari')"></button>
-                        </span>
-                    <?php endif; ?>
-                    <?php if ($selectedWilayah): ?>
-                        <?php 
-                            $namaWilayahTerpilih = '';
-                            foreach ($list_wilayah as $wil) {
-                                if ($wil['id_wilayah'] == $selectedWilayah) {
-                                    $namaWilayahTerpilih = $wil['nama_wilayah'];
-                                    break;
-                                }
-                            }
-                        ?>
-                        <span class="filter-badge">
-                            <i class="bi bi-geo-fill"></i>
-                            Wilayah: <?= esc($namaWilayahTerpilih) ?>
-                            <button type="button" class="btn-close btn-close-sm" onclick="removeFilter('wilayah')"></button>
-                        </span>
-                    <?php endif; ?>
-                    <?php if ($selectedKategori): ?>
-                        <span class="filter-badge">
-                            <i class="bi bi-tag-fill"></i>
-                            Kategori: <?= esc($selectedKategori) ?>
-                            <button type="button" class="btn-close btn-close-sm" onclick="removeFilter('kategori')"></button>
-                        </span>
-                    <?php endif; ?>
-                </div>
-            <?php endif; ?>
+            </div>
         </div>
+    </header>
 
-        <!-- TOOLBAR (Jumlah Data + Toggle View) -->
-        <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="container py-4 flex-grow-1">
+        <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom flex-wrap gap-3">
             <div>
-                <span class="badge bg-primary px-3 py-2">
-                    <i class="bi bi-database-fill me-1"></i>
-                    <?= count($umkm) ?> UMKM Ditemukan
-                </span>
+                <h5 class="text-muted mb-1">
+                    <i class="bi bi-grid-3x3-gap me-2"></i>
+                    Menampilkan <strong class="text-primary" id="countDisplay"><?= count($umkm) ?></strong> UMKM
+                </h5>
+                <div id="activeFilters"></div>
             </div>
             <div class="btn-group" role="group">
-                <a href="?<?= http_build_query(array_merge($_GET, ['view' => 'grid'])) ?>" 
-                   class="btn btn-sm <?= ($viewMode == 'grid') ? 'btn-primary' : 'btn-outline-primary' ?>">
-                    <i class="bi bi-grid-3x3-gap-fill"></i> Grid
-                </a>
-                <a href="?<?= http_build_query(array_merge($_GET, ['view' => 'list'])) ?>" 
-                   class="btn btn-sm <?= ($viewMode == 'list') ? 'btn-primary' : 'btn-outline-primary' ?>">
-                    <i class="bi bi-list-ul"></i> List
-                </a>
+                <button class="btn btn-outline-secondary <?= ($viewMode == 'grid') ? 'active' : '' ?>" 
+                        onclick="toggleView('grid')" id="btnGrid">
+                    <i class="bi bi-grid-fill"></i> <span class="d-none d-sm-inline ms-1">Grid</span>
+                </button>
+                <button class="btn btn-outline-secondary <?= ($viewMode == 'list') ? 'active' : '' ?>" 
+                        onclick="toggleView('list')" id="btnList">
+                    <i class="bi bi-list-ul"></i> <span class="d-none d-sm-inline ms-1">List</span>
+                </button>
             </div>
         </div>
 
-        <!-- GRID VIEW -->
-        <?php if ($viewMode == 'grid'): ?>
-            <div class="row g-4">
-                <?php if (empty($umkm)): ?>
-                    <div class="col-12">
-                        <div class="alert alert-info text-center py-5">
-                            <i class="bi bi-inbox display-1 d-block mb-3"></i>
-                            <h5>Tidak Ada Data UMKM</h5>
-                            <p class="mb-0">Coba ubah filter pencarian Anda</p>
-                        </div>
-                    </div>
-                <?php else: ?>
-                    <?php foreach ($umkm as $row): ?>
-                        <div class="col-md-4 col-sm-6">
-                            <div class="umkm-card">
-                                <img src="<?= base_url('uploads/umkm/' . esc($row['foto_umkm'])) ?>" 
-                                     alt="<?= esc($row['nama_usaha']) ?>"
-                                     loading="lazy">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-start mb-2">
-                                        <h5 class="card-title mb-0 fw-bold" style="font-size: 1.1rem;">
-                                            <?= esc($row['nama_usaha']) ?>
-                                        </h5>
-                                        <span class="kategori-badge"><?= esc($row['kategori']) ?></span>
+        <div id="umkmContainer">
+            <?php if(empty($umkm)): ?>
+                <div class="empty-state text-center py-5">
+                    <img src="https://cdn-icons-png.flaticon.com/512/4076/4076549.png" alt="Empty Data" width="100" style="opacity:0.5; filter:grayscale(1);">
+                    <h5 class="mt-3 text-muted">Tidak ada UMKM ditemukan</h5>
+                    <p class="text-secondary">Coba ubah kata kunci pencarian atau reset filter</p>
+                    <button class="btn btn-primary mt-3" onclick="resetFilter()">
+                        <i class="bi bi-arrow-counterclockwise me-2"></i>Tampilkan Semua
+                    </button>
+                </div>
+            <?php else: ?>
+                <div class="row <?= ($viewMode == 'grid') ? 'row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 g-4' : 'row-cols-1 g-3' ?>" id="umkmGrid">
+                    <?php foreach($umkm as $row): ?>
+                        <?php 
+                            $foto = ($row['foto_umkm'] && $row['foto_umkm'] != 'default.jpg') ? 'uploads/umkm/'.$row['foto_umkm'] : 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"%3E%3Crect fill="%23e9ecef" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" fill="%23adb5bd" font-size="20" font-family="Arial"%3ENo Image%3C/text%3E%3C/svg%3E';
+                            
+                            $colors = [
+                                'Kuliner' => 'danger', 'Fashion' => 'info', 'Agrobisnis' => 'success', 
+                                'Jasa' => 'primary', 'Kerajinan' => 'warning', 'Toko' => 'secondary'
+                            ];
+                            
+                            $katString = $row['kategori'] ?? 'Lainnya';
+                            $kategoriList = explode(', ', $katString);
+                        ?>
+                        <div class="col">
+                            <div class="card h-100 card-umkm shadow-sm border-0" onclick="bukaPopup(<?= $row['id_umkm'] ?>)" style="cursor:pointer;">
+                                <?php if($viewMode == 'grid'): ?>
+                                    <div class="umkm-img-container">
+                                        <img src="<?= base_url($foto) ?>" alt="<?= esc($row['nama_usaha']) ?>">
+                                        <div class="category-badge-container">
+                                            <?php foreach($kategoriList as $kat): 
+                                                $badgeColor = $colors[$kat] ?? 'secondary';
+                                            ?>
+                                                <span class="badge bg-<?= $badgeColor ?>"><?= esc($kat) ?></span>
+                                            <?php endforeach; ?>
+                                        </div>
                                     </div>
-                                    <p class="text-muted small mb-2">
-                                        <i class="bi bi-person-fill me-1"></i>
-                                        <?= esc($row['pemilik']) ?>
-                                    </p>
-                                    <p class="text-muted small mb-2">
-                                        <i class="bi bi-geo-alt-fill me-1"></i>
-                                        <?= esc($row['nama_wilayah']) ?> RW <?= $row['rw'] ?>, RT <?= $row['rt'] ?>
-                                    </p>
-                                    <p class="card-text mb-3" style="font-size: 0.9rem;">
-                                        <strong>Produk:</strong> <?= esc($row['produk']) ?>
-                                    </p>
-                                    <a href="https://wa.me/<?= esc($row['kontak_hp']) ?>?text=Halo%20<?= urlencode($row['nama_usaha']) ?>,%20saya%20tertarik%20dengan%20produk%20Anda" 
-                                       target="_blank" 
-                                       rel="noopener"
-                                       class="btn btn-success w-100">
-                                        <i class="bi bi-whatsapp me-1"></i> Hubungi via WhatsApp
-                                    </a>
-                                </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title fw-bold text-dark mb-2" style="line-height: 1.4;"><?= esc($row['nama_usaha']) ?></h5>
+                                        <p class="card-text text-muted small mb-2"><i class="bi bi-person me-1"></i><?= esc($row['pemilik']) ?></p>
+                                        <p class="card-text">
+                                            <span class="badge bg-light text-dark border"><i class="bi bi-geo-alt"></i> <?= esc($row['nama_wilayah']) ?></span>
+                                        </p>
+                                    </div>
+                                <?php else: ?>
+                                    <div class="row g-0 h-100">
+                                        <div class="col-md-4">
+                                            <div class="umkm-img-container-list h-100">
+                                                <img src="<?= base_url($foto) ?>" alt="<?= esc($row['nama_usaha']) ?>">
+                                                <div class="category-badge-container">
+                                                    <?php foreach($kategoriList as $kat): 
+                                                        $badgeColor = $colors[$kat] ?? 'secondary';
+                                                    ?>
+                                                        <span class="badge bg-<?= $badgeColor ?>"><?= esc($kat) ?></span>
+                                                    <?php endforeach; ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="card-body d-flex flex-column h-100">
+                                                <h5 class="card-title fw-bold mb-2"><?= esc($row['nama_usaha']) ?></h5>
+                                                <p class="card-text text-muted small mb-2"><i class="bi bi-person me-1"></i><?= esc($row['pemilik']) ?></p>
+                                                <p class="card-text text-truncate mb-3"><?= esc($row['produk']) ?></p>
+                                                <div class="d-flex justify-content-between align-items-center mt-auto">
+                                                    <span class="badge bg-light text-dark border"><i class="bi bi-geo-alt"></i> <?= esc($row['nama_wilayah']) ?></span>
+                                                    <button class="btn btn-sm btn-primary rounded-pill">Lihat Detail <i class="bi bi-arrow-right ms-1"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     <?php endforeach; ?>
-                <?php endif; ?>
-            </div>
-
-        <!-- LIST VIEW -->
-        <?php else: ?>
-            <?php if (empty($umkm)): ?>
-                <div class="alert alert-info text-center py-5">
-                    <i class="bi bi-inbox display-1 d-block mb-3"></i>
-                    <h5>Tidak Ada Data UMKM</h5>
-                    <p class="mb-0">Coba ubah filter pencarian Anda</p>
                 </div>
-            <?php else: ?>
-                <?php foreach ($umkm as $row): ?>
-                    <div class="umkm-list-item">
-                        <div class="row align-items-center">
-                            <div class="col-md-2 col-sm-12 text-center">
-                                <img src="<?= base_url('uploads/umkm/' . esc($row['foto_umkm'])) ?>" 
-                                     alt="<?= esc($row['nama_usaha']) ?>"
-                                     loading="lazy"
-                                     class="rounded">
-                            </div>
-                            <div class="col-md-7 col-sm-12">
-                                <div class="d-flex align-items-center gap-2 mb-2">
-                                    <h5 class="mb-0 fw-bold"><?= esc($row['nama_usaha']) ?></h5>
-                                    <span class="kategori-badge"><?= esc($row['kategori']) ?></span>
-                                </div>
-                                <p class="text-muted mb-1">
-                                    <i class="bi bi-person-fill me-1"></i>
-                                    <strong>Pemilik:</strong> <?= esc($row['pemilik']) ?>
-                                </p>
-                                <p class="text-muted mb-1">
-                                    <i class="bi bi-geo-alt-fill me-1"></i>
-                                    <strong>Lokasi:</strong> <?= esc($row['nama_wilayah']) ?> RW <?= $row['rw'] ?>, RT <?= $row['rt'] ?>
-                                </p>
-                                <p class="mb-0">
-                                    <i class="bi bi-box-seam me-1"></i>
-                                    <strong>Produk:</strong> <?= esc($row['produk']) ?>
-                                </p>
-                            </div>
-                            <div class="col-md-3 col-sm-12 text-center text-md-end mt-3 mt-md-0">
-                                <a href="https://wa.me/<?= esc($row['kontak_hp']) ?>?text=Halo%20<?= urlencode($row['nama_usaha']) ?>,%20saya%20tertarik%20dengan%20produk%20Anda" 
-                                   target="_blank" 
-                                   rel="noopener"
-                                   class="btn btn-success">
-                                    <i class="bi bi-whatsapp me-1"></i> Hubungi
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
             <?php endif; ?>
-        <?php endif; ?>
-
-        <!-- PAGINATION -->
-        <?php if (!empty($umkm) && $pager): ?>
-            <div class="d-flex justify-content-center mt-5">
-                <?= $pager->links('default', 'default_full') ?>
-            </div>
-        <?php endif; ?>
-
+        </div>
     </div>
 
-    <!-- FOOTER -->
-    <footer class="mt-5">
+    <footer class="footer mt-auto">
         <div class="container">
-            <div class="row">
-                <div class="col-md-6 mb-3 mb-md-0">
-                    <h5 class="fw-bold mb-3">Portal UMKM Desa Candimulyo</h5>
-                    <p class="mb-2">
-                        <i class="bi bi-geo-alt-fill me-2"></i>
-                        Desa Candimulyo, Kec. Kedu, Kab. Temanggung, Jawa Tengah
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <h6><i class="bi bi-building me-2"></i>Kantor Desa Candimulyo</h6>
+                    <p class="small mb-2">
+                        <i class="bi bi-geo-alt me-2"></i>Pakisan, RT.02/RW.05<br>
+                        <span class="ms-4">Desa Candimulyo Kedu</span><br>
+                        <span class="ms-4">Kec. Kedu, Kab. Temanggung</span>
                     </p>
-                    <p class="mb-0">
-                        <i class="bi bi-info-circle me-2"></i>
-                        Website ini dikelola oleh Tim KKN UNNES 2025
+                    <p class="small mb-2">
+                        <i class="bi bi-envelope me-2"></i>candimulyo-kedu@temanggungkab.go.id
                     </p>
                 </div>
-                <div class="col-md-3 mb-3 mb-md-0">
-                    <h6 class="fw-bold mb-3">Link Terkait</h6>
-                    <ul class="list-unstyled">
+
+                <div class="col-md-4">
+                    <h6><i class="bi bi-link-45deg me-2"></i>Link Terkait</h6>
+                    <ul class="list-unstyled small">
                         <li class="mb-2">
                             <a href="https://candimulyo-kedu.temanggungkab.go.id/frontend" target="_blank" rel="noopener">
-                                <i class="bi bi-arrow-right me-1"></i> Website Desa
+                                <i class="bi bi-globe me-2"></i>Website Desa Candimulyo
                             </a>
                         </li>
                         <li class="mb-2">
-                            <a href="#" data-bs-toggle="modal" data-bs-target="#modalTentang">
-                                <i class="bi bi-arrow-right me-1"></i> Tentang Portal
+                            <a href="https://temanggungkab.go.id" target="_blank" rel="noopener">
+                                <i class="bi bi-building me-2"></i>Website Kab. Temanggung
                             </a>
                         </li>
                         <li class="mb-2">
-                            <a href="#" data-bs-toggle="modal" data-bs-target="#modalCaraPesan">
-                                <i class="bi bi-arrow-right me-1"></i> Cara Pemesanan
+                            <a href="<?= base_url('login') ?>">
+                                <i class="bi bi-shield-lock me-2"></i>Portal Admin UMKM
                             </a>
                         </li>
                     </ul>
                 </div>
-                <div class="col-md-3">
-                    <h6 class="fw-bold mb-3">Kontak</h6>
-                    <p class="mb-2">
-                        <i class="bi bi-envelope me-2"></i>
-                        info@candimulyo-kedu.id
+
+                <div class="col-md-4">
+                    <h6><i class="bi bi-info-circle me-2"></i>Tentang Portal UMKM</h6>
+                    <p class="small">
+                        Sistem pendataan UMKM digital untuk memajukan ekonomi lokal Desa Candimulyo Kedu.
                     </p>
-                    <p class="mb-0">
-                        <i class="bi bi-telephone me-2"></i>
-                        (0293) xxx-xxxx
+                    <p class="small mb-0">
+                        <i class="bi bi-people me-2"></i>Dibuat oleh <strong>KKN GIAT 15 UNNES 2026</strong>
                     </p>
                 </div>
             </div>
-            <hr class="my-4 border-light">
-            <div class="text-center">
-                <small>&copy; <?= date('Y') ?> Portal UMKM Desa Candimulyo | Dibuat dengan <i class="bi bi-heart-fill text-danger"></i> oleh KKN UNNES</small>
+
+            <hr class="my-3" style="border-color: rgba(255,255,255,0.1);">
+            
+            <div class="text-center small opacity-75">
+                <p class="mb-0">
+                    &copy; <?= date('Y') ?> Portal UMKM Desa Candimulyo. 
+                    Dikembangkan dengan <i class="bi bi-heart-fill text-danger"></i> untuk kemajuan desa.
+                </p>
             </div>
         </div>
     </footer>
 
-    <!-- MODAL TENTANG -->
-    <div class="modal fade" id="modalTentang" tabindex="-1" aria-labelledby="modalTentangLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title fw-bold" id="modalTentangLabel">
-                        <i class="bi bi-info-circle me-2"></i>
-                        Tentang Portal UMKM Desa Candimulyo
-                    </h5>
+    <!-- MODAL DETAIL (TETAP SAMA) -->
+    <div class="modal fade" id="modalDetail" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-centered modal-fullscreen-md-down">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+          <div class="modal-header border-0 pb-0 position-sticky top-0 bg-white" style="z-index: 1030;">
+            <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body p-0 overflow-auto" style="max-height: 85vh;">
+            <div class="row g-0">
+              <div class="col-lg-5 bg-dark d-flex align-items-center justify-content-center p-3" style="min-height: 250px;">
+                  <img src="" id="popupFoto" class="img-fluid rounded shadow-sm w-100" style="max-height: 60vh; object-fit: contain;">
+              </div>
+              <div class="col-lg-7 bg-white p-4">
+                  <nav aria-label="breadcrumb">
+                      <ol class="breadcrumb small mb-3">
+                          <li class="breadcrumb-item">Desa Candimulyo</li>
+                          <li class="breadcrumb-item" id="popupWilayah">-</li>
+                          <li class="breadcrumb-item active" id="popupRT">-</li>
+                      </ol>
+                  </nav>
+                  <h2 class="fw-bold text-dark mb-2" id="popupJudul">Loading...</h2>
+                  <h6 class="text-muted fw-normal mb-3">
+                      <i class="bi bi-person-circle me-2"></i><span id="popupPemilik">-</span>
+                  </h6>
+                  <div class="mb-3" id="popupBadges"></div>
+                  <hr class="my-3">
+                  <h6 class="fw-bold text-uppercase text-secondary mb-3 small">
+                      <i class="bi bi-box-seam me-2"></i>Deskripsi Produk/Jasa
+                  </h6>
+                  <p class="text-dark lh-lg mb-4" style="text-align: justify; white-space: pre-line;" id="popupDeskripsi">
+                      Sedang memuat data...
+                  </p>
+                  <div class="d-grid gap-2 mt-4 mb-3">
+                      <a href="#" id="popupWA" target="_blank" rel="noopener" class="btn btn-success btn-lg rounded-pill shadow-sm fw-bold">
+                          <i class="bi bi-whatsapp me-2"></i> 
+                          <span class="d-none d-sm-inline">Hubungi via</span> WhatsApp
+                      </a>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL TENTANG (FITUR BARU) -->
+    <div class="modal fade" id="modalTentang" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow rounded-4">
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-info-circle-fill text-primary me-2"></i>Tentang Portal UMKM</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <h6 class="fw-bold mb-3">Apa itu Portal UMKM?</h6>
-                    <p>
+                <div class="modal-body p-4">
+                    <h5 class="fw-bold mb-3">Apa itu Portal UMKM?</h5>
+                    <p class="text-muted">
                         Portal UMKM Desa Candimulyo adalah platform digital yang dikembangkan untuk memfasilitasi 
                         promosi dan pemasaran produk lokal dari pelaku Usaha Mikro Kecil Menengah (UMKM) di Desa Candimulyo, 
                         Kecamatan Kedu, Kabupaten Temanggung.
@@ -622,51 +478,33 @@
                     </ul>
                     
                     <h6 class="fw-bold mb-3 mt-4">Cakupan Wilayah</h6>
-                    <p>
+                    <p class="text-muted">
                         Portal ini mencakup seluruh UMKM yang berdomisili di Desa Candimulyo, 
-                        yang terdiri dari beberapa RW dan RT dengan berbagai kategori usaha seperti:
+                        yang terdiri dari beberapa RW dan RT dengan berbagai kategori usaha.
                     </p>
-                    <div class="row g-2 mb-3">
-                        <?php foreach (KATEGORI_UMKM as $kat): ?>
-                            <div class="col-6 col-md-4">
-                                <span class="badge bg-secondary w-100 py-2">
-                                    <i class="bi bi-check-circle me-1"></i> <?= $kat ?>
-                                </span>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
                     
                     <h6 class="fw-bold mb-3 mt-4">Tim Pengembang</h6>
-                    <p>
-                        Website ini dikembangkan oleh Tim KKN Universitas Negeri Semarang (UNNES) Tahun 2025 
+                    <p class="text-muted mb-0">
+                        Website ini dikembangkan oleh Tim KKN GIAT 15 Universitas Negeri Semarang (UNNES) Tahun 2026 
                         sebagai bagian dari program pengabdian masyarakat untuk mendukung pemberdayaan ekonomi desa.
                     </p>
-                    
-                    <div class="alert alert-info mt-4" role="alert">
-                        <i class="bi bi-lightbulb-fill me-2"></i>
-                        <strong>Informasi:</strong> Portal ini bersifat katalog informasi. Transaksi pembelian 
-                        dilakukan langsung antara pembeli dan penjual melalui kontak yang tersedia.
-                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                <div class="modal-footer bg-light border-0">
+                    <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Tutup</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- MODAL CARA PESAN -->
-    <div class="modal fade" id="modalCaraPesan" tabindex="-1" aria-labelledby="modalCaraPesanLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title fw-bold" id="modalCaraPesanLabel">
-                        <i class="bi bi-cart-check me-2"></i>
-                        Cara Memesan Produk UMKM
-                    </h5>
+    <!-- MODAL CARA PESAN (FITUR BARU) -->
+    <div class="modal fade" id="modalCaraPesan" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow rounded-4">
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-cart-check-fill text-success me-2"></i>Cara Pemesanan</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body p-4">
                     <div class="alert alert-warning" role="alert">
                         <i class="bi bi-exclamation-triangle me-2"></i>
                         <strong>Perhatian:</strong> Portal ini BUKAN toko online. Pemesanan dilakukan langsung 
@@ -675,69 +513,33 @@
                     
                     <h6 class="fw-bold mb-3">Langkah-Langkah Pemesanan:</h6>
                     
-                    <div class="d-flex align-items-start mb-4">
-                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
-                             style="width: 40px; height: 40px; flex-shrink: 0;">
-                            <strong>1</strong>
-                        </div>
-                        <div>
-                            <h6 class="fw-bold mb-2">Cari Produk yang Diinginkan</h6>
-                            <p class="mb-0">
-                                Gunakan fitur pencarian dan filter untuk menemukan UMKM atau produk yang Anda cari. 
-                                Anda bisa filter berdasarkan kategori, wilayah, atau kata kunci.
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <div class="d-flex align-items-start mb-4">
-                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
-                             style="width: 40px; height: 40px; flex-shrink: 0;">
-                            <strong>2</strong>
-                        </div>
-                        <div>
-                            <h6 class="fw-bold mb-2">Klik Tombol WhatsApp</h6>
-                            <p class="mb-0">
-                                Setelah menemukan produk yang diinginkan, klik tombol 
-                                <span class="badge bg-success">
-                                    <i class="bi bi-whatsapp"></i> Hubungi via WhatsApp
-                                </span>
-                                pada kartu UMKM tersebut.
-                            </p>
+                    <div class="card bg-light border-0 mb-3">
+                        <div class="card-body">
+                            <ol class="mb-0 ps-3">
+                                <li class="mb-3">
+                                    <strong>Cari Produk yang Diinginkan</strong><br>
+                                    <small class="text-muted">Jelajahi produk di halaman Beranda. Gunakan fitur pencarian atau filter kategori untuk menemukan apa yang Anda butuhkan.</small>
+                                </li>
+                                <li class="mb-3">
+                                    <strong>Klik Kartu UMKM</strong><br>
+                                    <small class="text-muted">Klik gambar atau tombol "Lihat Detail" pada produk yang Anda minati untuk melihat informasi lengkap.</small>
+                                </li>
+                                <li class="mb-3">
+                                    <strong>Hubungi Penjual</strong><br>
+                                    <small class="text-muted">Di jendela detail, klik tombol hijau "Hubungi via WhatsApp". Anda akan diarahkan langsung ke aplikasi WhatsApp penjual.</small>
+                                </li>
+                                <li class="mb-0">
+                                    <strong>Lakukan Transaksi</strong><br>
+                                    <small class="text-muted">Tanyakan stok, harga, dan detail lainnya. Transaksi dilakukan langsung antara Anda dan penjual (di luar platform ini).</small>
+                                </li>
+                            </ol>
                         </div>
                     </div>
                     
-                    <div class="d-flex align-items-start mb-4">
-                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
-                             style="width: 40px; height: 40px; flex-shrink: 0;">
-                            <strong>3</strong>
-                        </div>
-                        <div>
-                            <h6 class="fw-bold mb-2">Hubungi Penjual</h6>
-                            <p class="mb-0">
-                                Anda akan diarahkan ke aplikasi WhatsApp dengan template pesan yang sudah disiapkan. 
-                                Tanyakan detail produk, harga, stok, dan cara pengambilan/pengiriman kepada penjual.
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <div class="d-flex align-items-start mb-4">
-                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
-                             style="width: 40px; height: 40px; flex-shrink: 0;">
-                            <strong>4</strong>
-                        </div>
-                        <div>
-                            <h6 class="fw-bold mb-2">Lakukan Transaksi</h6>
-                            <p class="mb-0">
-                                Sepakati harga, jumlah, dan metode pembayaran dengan penjual. Transaksi dilakukan 
-                                langsung antara Anda dan penjual (di luar platform ini).
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <div class="alert alert-success mt-4" role="alert">
+                    <div class="alert alert-success" role="alert">
                         <i class="bi bi-shield-check me-2"></i>
                         <strong>Tips Aman Berbelanja:</strong>
-                        <ul class="mb-0 mt-2">
+                        <ul class="mb-0 mt-2 small">
                             <li>Pastikan nomor WhatsApp yang dihubungi sesuai dengan yang tertera di portal</li>
                             <li>Tanyakan detail produk secara lengkap sebelum memesan</li>
                             <li>Gunakan metode pembayaran yang aman (COD/transfer dengan bukti)</li>
@@ -745,43 +547,267 @@
                         </ul>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                <div class="modal-footer bg-light border-0">
+                    <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Tutup</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
     <script>
-        // Fungsi Remove Filter (untuk badge X)
-        function removeFilter(filterName) {
-            const url = new URL(window.location);
-            url.searchParams.delete(filterName);
-            window.location.href = url.toString();
-        }
+        const BASE_URL = "<?= base_url() ?>";
+        let currentView = "<?= $viewMode ?? 'grid' ?>"; // default grid
+        let allUmkmData = <?= json_encode($umkm) ?>; // SIMPAN SEMUA DATA UMKM DI JAVASCRIPT
+
+        // ============================================
+        // FILTER OTOMATIS SAAT DROPDOWN BERUBAH
+        // ============================================
+        document.getElementById('wilayahFilter').addEventListener('change', applyFilter);
+        document.getElementById('kategoriFilter').addEventListener('change', applyFilter);
         
-        // Auto-close navbar saat link diklik (mobile)
-        document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
-            link.addEventListener('click', function() {
-                if (window.innerWidth < 992) {
-                    const navbarCollapse = document.querySelector('.navbar-collapse');
-                    if (navbarCollapse.classList.contains('show')) {
-                        bootstrap.Collapse.getInstance(navbarCollapse)?.hide();
-                    }
+        // SEARCH SAAT ENTER ATAU KETIK (OPSIONAL: Kalau mau live search, ganti 'keyup' jadi 'input')
+        document.getElementById('searchInput').addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') {
+                applyFilter();
+            }
+        });
+
+        function applyFilter() {
+            const keyword = document.getElementById('searchInput').value.toLowerCase();
+            const wilayahId = document.getElementById('wilayahFilter').value;
+            const kategori = document.getElementById('kategoriFilter').value;
+
+            let filtered = allUmkmData;
+
+            // FILTER BERDASARKAN KEYWORD
+            if (keyword) {
+                filtered = filtered.filter(umkm => 
+                    umkm.nama_usaha.toLowerCase().includes(keyword) || 
+                    (umkm.produk && umkm.produk.toLowerCase().includes(keyword))
+                );
+            }
+
+            // FILTER BERDASARKAN WILAYAH
+            if (wilayahId) {
+                filtered = filtered.filter(umkm => umkm.id_wilayah == wilayahId);
+            }
+
+            // FILTER BERDASARKAN KATEGORI
+            if (kategori) {
+                filtered = filtered.filter(umkm => umkm.kategori && umkm.kategori.includes(kategori));
+            }
+
+            // UPDATE UI
+            updateUmkmDisplay(filtered);
+            updateActiveFilters(keyword, wilayahId, kategori);
+            document.getElementById('countDisplay').textContent = filtered.length;
+            document.getElementById('totalUmkmStat').textContent = filtered.length + '+';
+        }
+
+        function resetFilter() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('wilayahFilter').value = '';
+            document.getElementById('kategoriFilter').value = '';
+            applyFilter();
+        }
+
+        function updateActiveFilters(keyword, wilayahId, kategori) {
+            let html = '<small class="text-muted">';
+            
+            if (keyword) {
+                html += `<span class="badge bg-light text-dark border me-1"><i class="bi bi-search"></i> "${keyword}"</span>`;
+            }
+            
+            if (wilayahId) {
+                const wilayahSelect = document.getElementById('wilayahFilter');
+                const wilayahName = wilayahSelect.options[wilayahSelect.selectedIndex].text;
+                html += `<span class="badge bg-light text-dark border me-1"><i class="bi bi-geo-alt"></i> ${wilayahName}</span>`;
+            }
+            
+            if (kategori) {
+                html += `<span class="badge bg-light text-dark border me-1"><i class="bi bi-tag"></i> ${kategori}</span>`;
+            }
+            
+            if (keyword || wilayahId || kategori) {
+                html += '<button class="btn btn-sm btn-outline-secondary ms-2" onclick="resetFilter()"><i class="bi bi-x-circle"></i> Reset</button>';
+            }
+            
+            html += '</small>';
+            document.getElementById('activeFilters').innerHTML = html;
+        }
+
+        // ============================================
+        // TOGGLE GRID / LIST TANPA REFRESH
+        // ============================================
+        function toggleView(view) {
+            currentView = view;
+            
+            // UPDATE TOMBOL
+            document.getElementById('btnGrid').classList.toggle('active', view === 'grid');
+            document.getElementById('btnList').classList.toggle('active', view === 'list');
+            
+            // RE-RENDER
+            applyFilter();
+        }
+
+        // ============================================
+        // RENDER UMKM CARDS
+        // ============================================
+        function updateUmkmDisplay(umkmList) {
+            const container = document.getElementById('umkmContainer');
+            
+            if (umkmList.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state text-center py-5">
+                        <img src="https://cdn-icons-png.flaticon.com/512/4076/4076549.png" alt="Empty Data" width="100" style="opacity:0.5; filter:grayscale(1);">
+                        <h5 class="mt-3 text-muted">Tidak ada UMKM ditemukan</h5>
+                        <p class="text-secondary">Coba ubah kata kunci pencarian atau reset filter</p>
+                        <button class="btn btn-primary mt-3" onclick="resetFilter()">
+                            <i class="bi bi-arrow-counterclockwise me-2"></i>Tampilkan Semua
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            const rowClass = currentView === 'grid' 
+                ? 'row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 g-4' 
+                : 'row row-cols-1 g-3';
+
+            let html = `<div class="${rowClass}" id="umkmGrid">`;
+
+            umkmList.forEach(umkm => {
+                const foto = (umkm.foto_umkm && umkm.foto_umkm != 'default.jpg')
+                    ? BASE_URL + '/uploads/umkm/' + umkm.foto_umkm 
+                    : 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"%3E%3Crect fill="%23e9ecef" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" fill="%23adb5bd" font-size="20" font-family="Arial"%3ENo Image%3C/text%3E%3C/svg%3E';
+
+                const colors = {
+                    'Kuliner': 'danger', 'Fashion': 'info', 'Agrobisnis': 'success',
+                    'Jasa': 'primary', 'Kerajinan': 'warning', 'Toko': 'secondary'
+                };
+
+                const kategoriList = umkm.kategori ? umkm.kategori.split(', ') : ['Lainnya'];
+                let badges = '';
+                kategoriList.forEach(kat => {
+                    const color = colors[kat] || 'secondary';
+                    badges += `<span class="badge bg-${color}">${kat}</span>`;
+                });
+
+                if (currentView === 'grid') {
+                    html += `
+                        <div class="col">
+                            <div class="card h-100 card-umkm shadow-sm border-0" onclick="bukaPopup(${umkm.id_umkm})" style="cursor:pointer;">
+                                <div class="umkm-img-container">
+                                    <img src="${foto}" alt="${umkm.nama_usaha}">
+                                    <div class="category-badge-container">${badges}</div>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title fw-bold text-dark mb-2">${umkm.nama_usaha}</h5>
+                                    <p class="card-text text-muted small mb-2"><i class="bi bi-person me-1"></i>${umkm.pemilik}</p>
+                                    <p class="card-text">
+                                        <span class="badge bg-light text-dark border"><i class="bi bi-geo-alt"></i> ${umkm.nama_wilayah}</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    html += `
+                        <div class="col">
+                            <div class="card h-100 card-umkm shadow-sm border-0" onclick="bukaPopup(${umkm.id_umkm})" style="cursor:pointer;">
+                                <div class="row g-0 h-100">
+                                    <div class="col-md-4">
+                                        <div class="umkm-img-container-list h-100">
+                                            <img src="${foto}" alt="${umkm.nama_usaha}">
+                                            <div class="category-badge-container">${badges}</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="card-body d-flex flex-column h-100">
+                                            <h5 class="card-title fw-bold mb-2">${umkm.nama_usaha}</h5>
+                                            <p class="card-text text-muted small mb-2"><i class="bi bi-person me-1"></i>${umkm.pemilik}</p>
+                                            <p class="card-text text-truncate mb-3">${umkm.produk || ''}</p>
+                                            <div class="d-flex justify-content-between align-items-center mt-auto">
+                                                <span class="badge bg-light text-dark border"><i class="bi bi-geo-alt"></i> ${umkm.nama_wilayah}</span>
+                                                <button class="btn btn-sm btn-primary rounded-pill">Lihat Detail <i class="bi bi-arrow-right ms-1"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
                 }
             });
-        });
-        
-        // Lazy loading untuk gambar
-        if ('loading' in HTMLImageElement.prototype) {
-            const images = document.querySelectorAll('img[loading="lazy"]');
-            images.forEach(img => {
-                img.src = img.src;
-            });
+
+            html += '</div>';
+            container.innerHTML = html;
         }
+
+        // ============================================
+        // POPUP MODAL DETAIL
+        // ============================================
+        function bukaPopup(id) {
+            const myModal = new bootstrap.Modal(document.getElementById('modalDetail'));
+            document.getElementById('popupJudul').innerText = "Memuat...";
+            document.getElementById('popupFoto').src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect fill='%23e9ecef' width='400' height='300'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='%23adb5bd' font-size='18'%3ELoading...%3C/text%3E%3C/svg%3E"; 
+            myModal.show();
+
+            fetch(BASE_URL + '/get-umkm/' + id)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('popupJudul').innerText = data.nama_usaha;
+                    document.getElementById('popupPemilik').innerText = data.pemilik;
+                    document.getElementById('popupWilayah').innerText = data.nama_wilayah;
+                    document.getElementById('popupRT').innerText = "RT " + data.rt;
+                    document.getElementById('popupDeskripsi').innerText = data.produk || 'Belum ada deskripsi';
+
+                    let katString = data.kategori || 'Lainnya';
+                    let kategoriList = katString.split(', ');
+                    
+                    let colors = {'Kuliner':'danger', 'Fashion':'info', 'Agrobisnis':'success', 'Jasa':'primary', 'Kerajinan':'warning', 'Toko':'secondary'};
+                    
+                    let badgesHtml = '';
+                    kategoriList.forEach(kat => {
+                        let color = colors[kat] || 'secondary';
+                        badgesHtml += `<span class="badge bg-${color} me-2">${kat}</span>`;
+                    });
+                    
+                    badgesHtml += `<span class="badge bg-light text-dark border">RW ${data.rw}</span>`;
+                    
+                    document.getElementById('popupBadges').innerHTML = badgesHtml;
+
+                    let fotoUrl = (data.foto_umkm && data.foto_umkm != 'default.jpg') 
+                        ? BASE_URL + '/uploads/umkm/' + data.foto_umkm 
+                        : 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600"%3E%3Crect fill="%23e9ecef" width="600" height="600"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" fill="%23adb5bd" font-size="24"%3ENo Image%3C/text%3E%3C/svg%3E';
+                    document.getElementById('popupFoto').src = fotoUrl;
+
+                    if(data.kontak_hp) {
+                        let hp = data.kontak_hp.replace(/\D/g,''); 
+                        if(hp.startsWith('0')) hp = '62' + hp.substring(1);
+                        let pesan = `Halo, saya tertarik dengan ${data.nama_usaha} di Portal UMKM Desa Candimulyo.`;
+                        document.getElementById('popupWA').href = "https://wa.me/" + hp + "?text=" + encodeURIComponent(pesan);
+                        document.getElementById('popupWA').classList.remove('disabled', 'btn-secondary');
+                        document.getElementById('popupWA').classList.add('btn-success');
+                    } else {
+                        document.getElementById('popupWA').href = "#";
+                        document.getElementById('popupWA').classList.add('disabled', 'btn-secondary');
+                        document.getElementById('popupWA').innerHTML = '<i class="bi bi-x-circle me-2"></i>Tidak Ada Kontak';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('popupJudul').innerText = "Error";
+                });
+        }
+        
+        // CLOSE MODAL SAAT KLIK DI LUAR POPUP
+        document.getElementById('modalDetail').addEventListener('click', function(e) {
+            if (e.target === this) {
+                bootstrap.Modal.getInstance(this).hide();
+            }
+        });
     </script>
-</body>
+  </body>
 </html>

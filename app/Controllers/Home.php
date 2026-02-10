@@ -12,16 +12,17 @@ class Home extends BaseController
         $umkmModel = new UmkmModel();
         $wilayahModel = new WilayahModel();
 
-        // Ambil Parameter Filter
+        // Ambil Parameter Filter (TETAP SUPPORT GET PARAMETER UNTUK FLEKSIBILITAS)
         $keyword = $this->request->getGet('cari');
         $filterWilayah = $this->request->getGet('wilayah');
         $filterKategori = $this->request->getGet('kategori');
         $viewMode = $this->request->getGet('view') ? $this->request->getGet('view') : 'grid';
 
-        // Query Data
+        // Query Data - AMBIL SEMUA (TANPA PAGINATION, SESUAI LANDING PAGE ASLI)
         $builder = $umkmModel->select('tb_umkm.*, tb_wilayah.nama_wilayah, tb_wilayah.rw')
                              ->join('tb_wilayah', 'tb_wilayah.id_wilayah = tb_umkm.id_wilayah');
 
+        // Filter di server-side hanya jika ada parameter GET (opsional)
         if ($keyword) {
             $builder->groupStart()
                     ->like('nama_usaha', $keyword)
@@ -37,17 +38,13 @@ class Home extends BaseController
             $builder->like('tb_umkm.kategori', $filterKategori);
         }
 
-        // PAGINATION (12 item per halaman)
-        $perPage = 12;
+        // AMBIL SEMUA DATA (UNTUK JAVASCRIPT FILTERING SEPERTI DI LANDING PAGE ASLI)
         $umkm = $builder->orderBy('tb_umkm.created_at', 'DESC')
-                       ->paginate($perPage, 'default');
-        
-        $pager = $umkmModel->pager;
+                       ->findAll();
 
         $data = [
             'title'           => 'Portal UMKM Desa Candimulyo',
-            'umkm'            => $umkm,
-            'pager'           => $pager,
+            'umkm'            => $umkm, // Kirim semua data ke view
             'list_wilayah'    => $wilayahModel->findAll(),
             'keyword'         => $keyword,
             'selectedWilayah' => $filterWilayah,
