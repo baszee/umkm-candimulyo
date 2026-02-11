@@ -62,6 +62,12 @@
                 <span class="d-none d-md-inline"><?= session()->get('nama_lengkap') ?></span>
                 <span class="d-md-none">Admin</span>
             </span>
+            
+            <a href="<?= base_url('admin/ganti_password') ?>" class="btn btn-sm btn-warning border-0 shadow-sm" title="Ganti Password">
+                <i class="bi bi-shield-lock"></i>
+                <span class="d-none d-sm-inline ms-1">Ganti Password</span>
+            </a>
+            
             <a href="<?= base_url('logout') ?>" class="btn btn-sm btn-danger border-0 shadow-sm">
                 <i class="bi bi-box-arrow-right"></i>
                 <span class="d-none d-sm-inline ms-1">Logout</span>
@@ -184,7 +190,7 @@
                               <div class="d-flex gap-2">
                                   <a href="<?= base_url('admin/edit/' . $row['id_umkm']) ?>" 
                                      class="btn btn-sm btn-warning flex-fill">
-                                      <i class="bi bi-pencil-square"></i> Edit
+                                     <i class="bi bi-pencil-square"></i> Edit
                                   </a>
                                   
                                   <a href="<?= base_url('admin/delete/' . $row['id_umkm']) ?>" 

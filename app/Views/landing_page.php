@@ -127,11 +127,20 @@
             position: absolute; top: 10px; right: 10px; z-index: 10; display: flex; flex-direction: column; align-items: flex-end; gap: 5px;
         }
         
+        /* FIX: Lock tinggi gambar di List View agar selaras (PERUBAHAN 1) */
         .umkm-img-container-list {
-            width: 100%; height: 200px; overflow: hidden; border-radius: 8px 0 0 8px; background: #f8f9fa;
+            width: 100%;
+            height: 200px; /* LOCK TINGGI */
+            overflow: hidden;
+            border-radius: 8px 0 0 8px;
+            background: #f8f9fa;
         }
+
         .umkm-img-container-list img {
-            width: 100%; height: 100%; object-fit: cover;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
         }
 
         @media (max-width: 576px) {
@@ -140,7 +149,12 @@
             .stats-row { gap: 1.5rem; }
             
             .umkm-img-container { height: 180px; }
-            .umkm-img-container-list { height: 150px; border-radius: 8px 8px 0 0; }
+            
+            /* Mobile List View adjustment */
+            .umkm-img-container-list {
+                height: 150px;
+                border-radius: 8px 8px 0 0;
+            }
         }
     </style>
   </head>
@@ -233,7 +247,7 @@
                         <select id="kategoriFilter" class="form-select">
                             <option value="">- Semua Kategori -</option>
                             <?php 
-                            // PAKAI KATEGORI DARI CONSTANT (PERUBAHAN PERTAMA)
+                            // PAKAI KATEGORI DARI CONSTANT
                             foreach(KATEGORI_UMKM as $c): 
                             ?>
                                 <option value="<?= $c ?>" <?= (isset($selectedKategori) && $selectedKategori == $c) ? 'selected' : '' ?>><?= $c ?></option>
@@ -378,12 +392,7 @@
                                 <i class="bi bi-building me-2"></i>Website Kab. Temanggung
                             </a>
                         </li>
-                        <li class="mb-2">
-                            <a href="<?= base_url('login') ?>">
-                                <i class="bi bi-shield-lock me-2"></i>Portal Admin UMKM
-                            </a>
-                        </li>
-                    </ul>
+                        </ul>
                 </div>
 
                 <div class="col-md-4">
@@ -401,14 +410,13 @@
             
             <div class="text-center small opacity-75">
                 <p class="mb-0">
-                    &copy; <?= date('Y') ?> Portal UMKM Desa Candimulyo. 
+                    © <?= date('Y') ?> Portal UMKM Desa Candimulyo. 
                     Dikembangkan dengan <i class="bi bi-heart-fill text-danger"></i> untuk kemajuan desa.
                 </p>
             </div>
         </div>
     </footer>
 
-    <!-- MODAL DETAIL (TETAP SAMA) -->
     <div class="modal fade" id="modalDetail" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-xl modal-dialog-centered modal-fullscreen-md-down">
         <div class="modal-content border-0 shadow-lg rounded-4">
@@ -425,9 +433,11 @@
                       <ol class="breadcrumb small mb-3">
                           <li class="breadcrumb-item">Desa Candimulyo</li>
                           <li class="breadcrumb-item" id="popupWilayah">-</li>
-                          <li class="breadcrumb-item active" id="popupRT">-</li>
+                          <li class="breadcrumb-item">RW <span id="popupRW">-</span></li>
+                          <li class="breadcrumb-item active">RT <span id="popupRT">-</span></li>
                       </ol>
                   </nav>
+
                   <h2 class="fw-bold text-dark mb-2" id="popupJudul">Loading...</h2>
                   <h6 class="text-muted fw-normal mb-3">
                       <i class="bi bi-person-circle me-2"></i><span id="popupPemilik">-</span>
@@ -440,7 +450,13 @@
                   <p class="text-dark lh-lg mb-4" style="text-align: justify; white-space: pre-line;" id="popupDeskripsi">
                       Sedang memuat data...
                   </p>
+                  
                   <div class="d-grid gap-2 mt-4 mb-3">
+                      <a href="#" id="popupMaps" target="_blank" rel="noopener" class="btn btn-primary btn-lg rounded-pill shadow-sm fw-bold">
+                          <i class="bi bi-geo-alt-fill me-2"></i> 
+                          Lihat Lokasi di Google Maps
+                      </a>
+                      
                       <a href="#" id="popupWA" target="_blank" rel="noopener" class="btn btn-success btn-lg rounded-pill shadow-sm fw-bold">
                           <i class="bi bi-whatsapp me-2"></i> 
                           <span class="d-none d-sm-inline">Hubungi via</span> WhatsApp
@@ -453,7 +469,6 @@
       </div>
     </div>
 
-    <!-- MODAL TENTANG (FITUR BARU) -->
     <div class="modal fade" id="modalTentang" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content border-0 shadow rounded-4">
@@ -496,7 +511,6 @@
         </div>
     </div>
 
-    <!-- MODAL CARA PESAN (FITUR BARU) -->
     <div class="modal fade" id="modalCaraPesan" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content border-0 shadow rounded-4">
@@ -566,7 +580,7 @@
         document.getElementById('wilayahFilter').addEventListener('change', applyFilter);
         document.getElementById('kategoriFilter').addEventListener('change', applyFilter);
         
-        // SEARCH SAAT ENTER ATAU KETIK (OPSIONAL: Kalau mau live search, ganti 'keyup' jadi 'input')
+        // SEARCH SAAT ENTER ATAU KETIK
         document.getElementById('searchInput').addEventListener('keyup', function(e) {
             if (e.key === 'Enter') {
                 applyFilter();
@@ -746,7 +760,7 @@
         }
 
         // ============================================
-        // POPUP MODAL DETAIL
+        // POPUP MODAL DETAIL (JS UPDATE PERUBAHAN 4)
         // ============================================
         function bukaPopup(id) {
             const myModal = new bootstrap.Modal(document.getElementById('modalDetail'));
@@ -760,7 +774,9 @@
                     document.getElementById('popupJudul').innerText = data.nama_usaha;
                     document.getElementById('popupPemilik').innerText = data.pemilik;
                     document.getElementById('popupWilayah').innerText = data.nama_wilayah;
-                    document.getElementById('popupRT').innerText = "RT " + data.rt;
+                    // ISI DATA RW DAN RT
+                    document.getElementById('popupRW').innerText = data.rw;
+                    document.getElementById('popupRT').innerText = data.rt;
                     document.getElementById('popupDeskripsi').innerText = data.produk || 'Belum ada deskripsi';
 
                     let katString = data.kategori || 'Lainnya';
@@ -774,6 +790,7 @@
                         badgesHtml += `<span class="badge bg-${color} me-2">${kat}</span>`;
                     });
                     
+                    // Tambahan badge RW di list badges
                     badgesHtml += `<span class="badge bg-light text-dark border">RW ${data.rw}</span>`;
                     
                     document.getElementById('popupBadges').innerHTML = badgesHtml;
@@ -783,6 +800,12 @@
                         : 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600"%3E%3Crect fill="%23e9ecef" width="600" height="600"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" fill="%23adb5bd" font-size="24"%3ENo Image%3C/text%3E%3C/svg%3E';
                     document.getElementById('popupFoto').src = fotoUrl;
 
+                    // === FITUR BARU: GOOGLE MAPS AUTO-LINK ===
+                    let queryMaps = encodeURIComponent(data.nama_usaha + ' ' + data.nama_wilayah + ' Candimulyo Kedu Temanggung');
+                    let linkMaps = 'https://www.google.com/maps/search/?api=1&query=' + queryMaps;
+                    document.getElementById('popupMaps').href = linkMaps;
+                    
+                    // WhatsApp Link
                     if(data.kontak_hp) {
                         let hp = data.kontak_hp.replace(/\D/g,''); 
                         if(hp.startsWith('0')) hp = '62' + hp.substring(1);

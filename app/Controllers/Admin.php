@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\UmkmModel;
 use App\Models\WilayahModel;
+use App\Models\UserModel;
 
 class Admin extends BaseController
 {
@@ -319,4 +320,52 @@ class Admin extends BaseController
         fclose($file);
         exit;
     }
-}   
+
+    // ===== FITUR BARU: GANTI PASSWORD =====
+    
+    public function ganti_password()
+    {
+        return view('admin/ganti_password');
+    }
+
+    public function update_password()
+    {
+        $userModel = new UserModel();
+        
+        // Ambil input
+        $passwordLama = $this->request->getPost('password_lama');
+        $passwordBaru = $this->request->getPost('password_baru');
+        $konfirmasiPassword = $this->request->getPost('konfirmasi_password');
+        
+        // Validasi input
+        if (empty($passwordLama) || empty($passwordBaru) || empty($konfirmasiPassword)) {
+            return redirect()->back()->with('error', 'Semua field harus diisi!');
+        }
+        
+        // Cek password baru dan konfirmasi sama
+        if ($passwordBaru !== $konfirmasiPassword) {
+            return redirect()->back()->with('error', 'Password baru dan konfirmasi tidak cocok!');
+        }
+        
+        // Cek panjang password minimal 6 karakter
+        if (strlen($passwordBaru) < 6) {
+            return redirect()->back()->with('error', 'Password minimal 6 karakter!');
+        }
+        
+        // Ambil data user login
+        $userId = session()->get('id_user');
+        $user = $userModel->find($userId);
+        
+        // Verifikasi password lama
+        if (!password_verify($passwordLama, $user['password_hash'])) {
+            return redirect()->back()->with('error', 'Password lama salah!');
+        }
+        
+        // Update password baru
+        $userModel->update($userId, [
+            'password_hash' => password_hash($passwordBaru, PASSWORD_DEFAULT)
+        ]);
+        
+        return redirect()->to('admin')->with('success', 'Password berhasil diperbarui!');
+    }
+}

@@ -21,4 +21,7 @@ $routes->group('admin', ['filter' => 'auth'], function($routes) {
     $routes->get('edit/(:num)', 'Admin::edit/$1');
     $routes->post('update/(:num)', 'Admin::update/$1');
     $routes->get('export', 'Admin::export');
+
+    $routes->get('ganti_password', 'Admin::ganti_password');
+    $routes->post('update_password', 'Admin::update_password');
 });
