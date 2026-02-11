@@ -16,6 +16,7 @@
             font-family: 'Poppins', sans-serif;
         }
 
+        /* HERO SECTION */
         .hero-section {
             background: linear-gradient(135deg, #2C3E50, #4CA1AF);
             color: white;
@@ -36,6 +37,7 @@
         
         .hero-section .container { position: relative; z-index: 1; }
         
+        /* STATS */
         .stats-row {
             display: flex; justify-content: center; gap: 3rem; margin-top: 2rem; flex-wrap: wrap;
         }
@@ -43,8 +45,7 @@
         .stat-item h2 { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
         .stat-item p { font-size: 0.9rem; opacity: 0.9; margin: 0; }
         
-        .toast-container { position: fixed; top: 100px; right: 20px; z-index: 9999; }
-        
+        /* FOOTER & SOCIAL MEDIA */
         .footer {
             background: linear-gradient(135deg, #2C3E50, #34495e);
             color: white; padding: 3rem 0 1rem; margin-top: 4rem;
@@ -52,30 +53,47 @@
         .footer a { color: #4CA1AF; text-decoration: none; transition: color 0.3s; }
         .footer a:hover { color: #6dbbc7; }
         .footer h6 { font-weight: 600; margin-bottom: 1rem; color: #4CA1AF; }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            /* justify-content: center; */ /* Opsional: aktifkan jika ingin tengah */
+            align-items: center;
+            margin-top: 15px;
+        }
+        .social-icons a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+        .social-icons a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .social-icons a.facebook:hover {
+            background: #1877F2;
+        }
+        .social-icons a.instagram:hover {
+            background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+        }
         
+        /* GENERAL UI */
         html { scroll-behavior: smooth; }
+        .navbar-brand:hover { opacity: 0.9; }
+        .navbar-toggler { border: none; outline: none; }
+        .navbar-toggler:focus { box-shadow: none; }
+        .nav-link { font-weight: 500; padding: 0.5rem 1rem; }
+        .nav-link:hover { color: #ffc107 !important; }
         
-        .navbar-brand:hover {
-            opacity: 0.9;
-        }
-        
-        /* NAVBAR CUSTOM UNTUK MOBILE */
-        .navbar-toggler {
-            border: none;
-            outline: none;
-        }
-        .navbar-toggler:focus {
-            box-shadow: none;
-        }
-        .nav-link {
-            font-weight: 500;
-            padding: 0.5rem 1rem;
-        }
-        .nav-link:hover {
-            color: #ffc107 !important;
-        }
-        
-        /* LOADING OVERLAY */
+        /* LOADING */
         .loading-overlay {
             display: none;
             position: fixed;
@@ -85,28 +103,20 @@
             align-items: center;
             justify-content: center;
         }
-        
-        .loading-overlay.active {
-            display: flex;
-        }
-        
+        .loading-overlay.active { display: flex; }
         .spinner-border-custom {
             width: 3rem; height: 3rem;
             border: 0.3em solid rgba(255,255,255,0.3);
             border-top-color: #4CA1AF;
         }
         
-        /* FADE IN ANIMATION FOR CARDS */
+        /* CARDS ANIMATION & STYLE */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        .card-umkm { animation: fadeInUp 0.4s ease-out; }
         
-        .card-umkm {
-            animation: fadeInUp 0.4s ease-out;
-        }
-        
-        /* SEARCH BOX HERO */
         .search-box-hero {
             border-radius: 15px;
             background: rgba(255,255,255,0.97);
@@ -114,7 +124,7 @@
             backdrop-filter: blur(10px);
         }
 
-        /* CARD STYLE UNTUK JS */
+        /* GRID VIEW IMAGE */
         .umkm-img-container {
             width: 100%; height: 220px; overflow: hidden; position: relative; background: #f8f9fa; border-radius: 8px 8px 0 0;
         }
@@ -127,30 +137,23 @@
             position: absolute; top: 10px; right: 10px; z-index: 10; display: flex; flex-direction: column; align-items: flex-end; gap: 5px;
         }
         
-        /* FIX: Lock tinggi gambar di List View agar selaras (PERUBAHAN 1) */
+        /* LIST VIEW IMAGE FIX */
         .umkm-img-container-list {
             width: 100%;
-            height: 200px; /* LOCK TINGGI */
+            height: 200px; /* Lock height */
             overflow: hidden;
             border-radius: 8px 0 0 8px;
             background: #f8f9fa;
         }
-
         .umkm-img-container-list img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
+            width: 100%; height: 100%; object-fit: cover; object-position: center;
         }
 
         @media (max-width: 576px) {
             .hero-section { padding: 120px 0 40px; }
             .hero-section h1 { font-size: 1.75rem !important; }
             .stats-row { gap: 1.5rem; }
-            
             .umkm-img-container { height: 180px; }
-            
-            /* Mobile List View adjustment */
             .umkm-img-container-list {
                 height: 150px;
                 border-radius: 8px 8px 0 0;
@@ -168,14 +171,24 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top shadow-sm" style="background: linear-gradient(90deg, #2C3E50, #4CA1AF);">
       <div class="container">
-        <a class="navbar-brand d-flex align-items-center" href="<?= base_url() ?>">
-            <img src="<?= base_url('assets/images/logo-temanggung.png') ?>" alt="Logo" height="45" class="me-3">
-            <div class="d-flex flex-column lh-sm">
-                <span class="fw-bold text-white" style="font-size: 1.1rem;">Desa Candimulyo Kedu</span>
-                <small class="text-white-50" style="font-size: 0.75rem;">Kec. Kedu, Kab. Temanggung</small>
+        
+        <a class="navbar-brand d-flex align-items-center gap-3" href="<?= base_url() ?>">
+            <img src="<?= base_url('assets/images/logo-temanggung.png') ?>" alt="Logo" height="52" class="me-1">
+            
+            <div class="d-flex flex-column justify-content-center text-uppercase fw-bold text-white lh-1">
+                <span style="font-size: 0.7rem; letter-spacing: 2.5px; margin-bottom: 2px; opacity: 0.9;">
+                    Desa
+                </span>
+                
+                <span style="font-size: 1.1rem; letter-spacing: 0.5px; margin-bottom: 1px;">
+                    Candimulyo
+                </span>
+                
+                <span style="font-size: 1.1rem; letter-spacing: 0.5px;">
+                    Kedu
+                </span>
             </div>
         </a>
-
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -247,7 +260,6 @@
                         <select id="kategoriFilter" class="form-select">
                             <option value="">- Semua Kategori -</option>
                             <?php 
-                            // PAKAI KATEGORI DARI CONSTANT
                             foreach(KATEGORI_UMKM as $c): 
                             ?>
                                 <option value="<?= $c ?>" <?= (isset($selectedKategori) && $selectedKategori == $c) ? 'selected' : '' ?>><?= $c ?></option>
@@ -392,7 +404,18 @@
                                 <i class="bi bi-building me-2"></i>Website Kab. Temanggung
                             </a>
                         </li>
-                        </ul>
+                    </ul>
+                    
+                    <div class="social-icons">
+                        <a href="https://www.facebook.com/people/Pemdes-Candimulyo/pfbid0GtFHb6dBt5184CqmpF97vVdzTDaCsicyLZr3Z2SkarBXZHQ7J8BCjMqLroAb8biyl/" 
+                           target="_blank" rel="noopener" class="facebook" title="Facebook Pemdes Candimulyo">
+                            <i class="bi bi-facebook"></i>
+                        </a>
+                        <a href="https://www.instagram.com/pemerintahdesacandimulyo/" 
+                           target="_blank" rel="noopener" class="instagram" title="Instagram Pemdes Candimulyo">
+                            <i class="bi bi-instagram"></i>
+                        </a>
+                    </div>
                 </div>
 
                 <div class="col-md-4">
@@ -760,7 +783,7 @@
         }
 
         // ============================================
-        // POPUP MODAL DETAIL (JS UPDATE PERUBAHAN 4)
+        // POPUP MODAL DETAIL
         // ============================================
         function bukaPopup(id) {
             const myModal = new bootstrap.Modal(document.getElementById('modalDetail'));
@@ -774,7 +797,6 @@
                     document.getElementById('popupJudul').innerText = data.nama_usaha;
                     document.getElementById('popupPemilik').innerText = data.pemilik;
                     document.getElementById('popupWilayah').innerText = data.nama_wilayah;
-                    // ISI DATA RW DAN RT
                     document.getElementById('popupRW').innerText = data.rw;
                     document.getElementById('popupRT').innerText = data.rt;
                     document.getElementById('popupDeskripsi').innerText = data.produk || 'Belum ada deskripsi';
@@ -790,7 +812,6 @@
                         badgesHtml += `<span class="badge bg-${color} me-2">${kat}</span>`;
                     });
                     
-                    // Tambahan badge RW di list badges
                     badgesHtml += `<span class="badge bg-light text-dark border">RW ${data.rw}</span>`;
                     
                     document.getElementById('popupBadges').innerHTML = badgesHtml;
@@ -805,7 +826,6 @@
                     let linkMaps = 'https://www.google.com/maps/search/?api=1&query=' + queryMaps;
                     document.getElementById('popupMaps').href = linkMaps;
                     
-                    // WhatsApp Link
                     if(data.kontak_hp) {
                         let hp = data.kontak_hp.replace(/\D/g,''); 
                         if(hp.startsWith('0')) hp = '62' + hp.substring(1);
@@ -825,7 +845,6 @@
                 });
         }
         
-        // CLOSE MODAL SAAT KLIK DI LUAR POPUP
         document.getElementById('modalDetail').addEventListener('click', function(e) {
             if (e.target === this) {
                 bootstrap.Modal.getInstance(this).hide();

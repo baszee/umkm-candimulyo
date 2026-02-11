@@ -13,5 +13,5 @@ class UserModel extends Model
     protected $useTimestamps    = true;
     
     // PERBAIKAN: Ganti 'password' jadi 'password_hash' dan tambah 'role'
-    protected $allowedFields    = ['username', 'password', 'nama_lengkap', 'role'];
+    protected $allowedFields    = ['username', 'password_hash', 'nama_lengkap', 'role'];
 }
