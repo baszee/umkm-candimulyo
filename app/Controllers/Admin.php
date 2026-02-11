@@ -10,28 +10,23 @@ use App\Models\UserModel;
 class Admin extends BaseController
 {
     /**
-     * Validasi file upload (Fungsi Helper)
-     * @return bool|string true jika valid, string error jika tidak
+     * Helper: Validasi file upload
      */
     private function validateUpload($file)
     {
-        // Cek apakah file ada
         if (!$file || !$file->isValid()) {
-            return true; // Boleh kosong (nanti pakai default)
+            return true; 
         }
         
-        // Whitelist MIME type (KEAMANAN!)
         $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
         if (!in_array($file->getMimeType(), $allowedTypes)) {
             return 'File harus berupa gambar (JPG, PNG, atau GIF)';
         }
         
-        // Maksimal 2MB
         if ($file->getSize() > 2048000) {
             return 'Ukuran file maksimal 2MB';
         }
         
-        // Cek ekstensi file (double check)
         $ext = $file->getExtension();
         if (!in_array(strtolower($ext), ['jpg', 'jpeg', 'png', 'gif'])) {
             return 'Ekstensi file tidak diizinkan';
@@ -41,127 +36,93 @@ class Admin extends BaseController
     }
 
     /**
-     * Fungsi Helper: Bersihkan dan Validasi Nomor HP
-     * @return string|false Nomor HP yang sudah dibersihkan, atau false jika tidak valid
+     * Helper: Bersihkan Nomor HP
      */
     private function cleanPhoneNumber($hp)
     {
-        // Jika kosong, return string kosong (opsional)
-        if (empty($hp)) {
-            return '';
-        }
-        
-        // STEP 1: Hapus semua karakter kecuali angka dan tanda +
+        if (empty($hp)) return '';
         $hp = preg_replace('/[^0-9+]/', '', $hp);
-        
-        // STEP 2: Hapus tanda + jika ada
         $hp = str_replace('+', '', $hp);
         
-        // STEP 3: Konversi ke format 62
         if (substr($hp, 0, 1) === '0') {
-            // 08xxx -> 628xxx
             $hp = '62' . substr($hp, 1);
         } elseif (substr($hp, 0, 1) === '8') {
-            // 8xxx -> 628xxx
             $hp = '62' . $hp;
         } elseif (substr($hp, 0, 2) !== '62') {
-            // Jika tidak dimulai dengan 0, 8, atau 62 -> Invalid
             return false;
         }
         
-        // STEP 4: Validasi panjang (nomor Indonesia: 12-15 digit setelah jadi 62xxx)
-        if (strlen($hp) < 12 || strlen($hp) > 15) {
+        if (strlen($hp) < 10 || strlen($hp) > 15) {
             return false;
         }
-        
         return $hp;
     }
 
     /**
-     * Fungsi Helper: Resize dan Kompres Gambar
+     * Helper: Optimasi Gambar
      */
     private function optimizeImage($file, $fileName, $maxWidth = 800, $quality = 80)
     {
         $image = \Config\Services::image();
-        
         $uploadPath = 'uploads/umkm/' . $fileName;
         
         try {
             $image->withFile($file)
                   ->resize($maxWidth, $maxWidth, true, 'height')
                   ->save($uploadPath, $quality);
-            
             return true;
         } catch (\Exception $e) {
-            log_message('error', 'Image optimization failed: ' . $e->getMessage());
-            
-            // Fallback: pindahkan file tanpa optimasi
             $file->move('uploads/umkm', $fileName);
             return false;
         }
     }
 
-    // Halaman Utama Admin (Tabel)
+    // DASHBOARD
     public function index()
     {
         $umkmModel = new UmkmModel();
         $wilayahModel = new WilayahModel();
         
-        // 1. Ambil Data Tabel (Join Wilayah)
         $data['umkm'] = $umkmModel->getUmkmLengkap(); 
-        
-        // 2. Hitung Statistik buat Dashboard
         $data['total_umkm'] = $umkmModel->countAll();
         $data['total_wilayah'] = $wilayahModel->countAll();
 
         return view('admin/index', $data);
     }
 
-    // Halaman Form Tambah Data
+    // CREATE
     public function create()
     {
         $wilayahModel = new WilayahModel();
-        
-        // Kirim daftar wilayah ke form biar bisa dipilih
         $data['wilayah'] = $wilayahModel->findAll();
-        
         return view('admin/create', $data);
     }
 
-    // Proses Simpan Data ke Database
+    // SAVE
     public function save()
     {
         $umkmModel = new UmkmModel();
 
-        // 1. STANDARDISASI NOMOR HP
         $hp = $this->request->getPost('kontak_hp');
         $cleanedHP = $this->cleanPhoneNumber($hp);
         
-        // Jika validasi gagal (return false), tampilkan error
         if ($cleanedHP === false && !empty($hp)) {
-            return redirect()->back()->withInput()->with('errors', ['Nomor HP tidak valid. Gunakan format: 08xxx, 8xxx, atau 62xxx']);
+            return redirect()->back()->withInput()->with('errors', ['Nomor HP tidak valid. Gunakan format: 08xxx']);
         }
 
-        // 2. STANDARDISASI NAMA FILE (Tanggal + Unik)
         $fileFoto = $this->request->getFile('foto_umkm');
-        
-        // VALIDASI FILE UPLOAD (KEAMANAN!)
         $validation = $this->validateUpload($fileFoto);
         if ($validation !== true) {
             return redirect()->back()->withInput()->with('errors', [$validation]);
         }
         
         if ($fileFoto && $fileFoto->isValid() && ! $fileFoto->hasMoved()) {
-            // Format: YYYYMMDD_jam_acak.ext
             $namaFoto = date('Ymd_His') . '_' . $fileFoto->getRandomName();
-            
-            // Optimasi gambar (resize max 800px, quality 80%)
             $this->optimizeImage($fileFoto, $namaFoto, 800, 80);
         } else {
             $namaFoto = 'default.jpg';
         }
 
-        // 3. Simpan
         $umkmModel->save([
             'nama_usaha' => $this->request->getPost('nama_usaha'),
             'kategori' => implode(', ', (array)$this->request->getPost('kategori')),
@@ -176,15 +137,12 @@ class Admin extends BaseController
         return redirect()->to('admin')->with('success', 'Data UMKM berhasil ditambahkan');
     }
 
-    // Fungsi Hapus Data
+    // DELETE
     public function delete($id)
     {
         $umkmModel = new UmkmModel();
-        
-        // Ambil data UMKM untuk hapus fotonya juga
         $umkm = $umkmModel->find($id);
         
-        // Hapus file foto jika bukan default
         if ($umkm && $umkm['foto_umkm'] !== 'default.jpg') {
             $filePath = 'uploads/umkm/' . $umkm['foto_umkm'];
             if (file_exists($filePath)) {
@@ -192,21 +150,17 @@ class Admin extends BaseController
             }
         }
         
-        // Hapus data dari database
         $umkmModel->delete($id);
-        
         return redirect()->to('admin')->with('success', 'Data UMKM berhasil dihapus');
     }
 
-    // Tampilkan Form Edit
+    // EDIT
     public function edit($id)
     {
         $umkmModel = new UmkmModel();
         $wilayahModel = new WilayahModel();
 
-        // Ambil data UMKM yang mau diedit
         $data['umkm'] = $umkmModel->find($id);
-        // Ambil data wilayah buat dropdown
         $data['wilayah'] = $wilayahModel->findAll();
 
         if (empty($data['umkm'])) {
@@ -216,52 +170,38 @@ class Admin extends BaseController
         return view('admin/edit', $data);
     }
 
-    // Proses Simpan Perubahan (UPDATE)
+    // UPDATE
     public function update($id)
     {
         $umkmModel = new UmkmModel();
 
-        // 1. STANDARDISASI NOMOR HP
         $hp = $this->request->getPost('kontak_hp');
         $cleanedHP = $this->cleanPhoneNumber($hp);
         
         if ($cleanedHP === false && !empty($hp)) {
-            return redirect()->back()->withInput()->with('errors', ['Nomor HP tidak valid. Gunakan format: 08xxx, 8xxx, atau 62xxx']);
+            return redirect()->back()->withInput()->with('errors', ['Nomor HP tidak valid.']);
         }
 
-        // 2. LOGIK FOTO
         $fileFoto = $this->request->getFile('foto_umkm');
-        
-        // VALIDASI FILE
         $validation = $this->validateUpload($fileFoto);
         if ($validation !== true) {
             return redirect()->back()->withInput()->with('errors', [$validation]);
         }
         
         if ($fileFoto && $fileFoto->isValid() && ! $fileFoto->hasMoved()) {
-            // Kalau upload baru -> Generate nama baru & Pindahkan
             $namaFoto = date('Ymd_His') . '_' . $fileFoto->getRandomName();
-            
-            // Optimasi gambar
             $this->optimizeImage($fileFoto, $namaFoto, 800, 80);
             
-            // Hapus foto lama jika bukan default
             $umkmLama = $umkmModel->find($id);
             if ($umkmLama && $umkmLama['foto_umkm'] !== 'default.jpg') {
                 $filePathLama = 'uploads/umkm/' . $umkmLama['foto_umkm'];
-                if (file_exists($filePathLama)) {
-                    unlink($filePathLama);
-                }
+                if (file_exists($filePathLama)) unlink($filePathLama);
             }
         } else {
-            // Kalau tidak upload -> Pakai nama foto lama
             $namaFoto = $this->request->getPost('foto_lama');
-            if (empty($namaFoto)) {
-                $namaFoto = 'default.jpg';
-            }
+            if (empty($namaFoto)) $namaFoto = 'default.jpg';
         }
 
-        // 3. SIMPAN UPDATE DENGAN ID
         $umkmModel->update($id, [
             'nama_usaha' => $this->request->getPost('nama_usaha'),
             'kategori' => implode(', ', (array)$this->request->getPost('kategori')),
@@ -276,31 +216,23 @@ class Admin extends BaseController
         return redirect()->to('admin')->with('success', 'Data UMKM berhasil diperbarui');
     }
 
-    // Fungsi Export ke Excel (CSV)
+    // EXPORT
     public function export()
     {
         $umkmModel = new UmkmModel();
         $umkm = $umkmModel->getUmkmLengkap();
-
-        // Nama file saat didownload
         $filename = 'Data_UMKM_Desa_Candimulyo_' . date('Y-m-d_H-i') . '.csv';
 
-        // Setting Header Browser
         header("Content-Description: File Transfer");
         header("Content-Disposition: attachment; filename=$filename");
         header("Content-Type: text/csv; charset=utf-8");
 
-        // Buka pintu output file
         $file = fopen('php://output', 'w');
-        
-        // Tambah UTF-8 BOM untuk Excel Indonesia biar simbol aman
         fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
 
-        // 1. Tulis Baris Judul (Tambah Kolom Kategori)
         $header = ['No', 'Kategori', 'Nama Usaha', 'Pemilik', 'Wilayah', 'RW', 'RT', 'Produk', 'Kontak HP', 'Tanggal Input'];
         fputcsv($file, $header);
 
-        // 2. Tulis Isi Data
         foreach ($umkm as $key => $row) {
             $data = [
                 $key + 1,
@@ -311,61 +243,67 @@ class Admin extends BaseController
                 $row['rw'],
                 'RT ' . $row['rt'], 
                 $row['produk'],
-                "'" . $row['kontak_hp'], // Trik biar 0 tidak hilang di Excel
+                "'" . $row['kontak_hp'],
                 $row['created_at']
             ];
             fputcsv($file, $data);
         }
-
         fclose($file);
         exit;
     }
 
-    // ===== FITUR BARU: GANTI PASSWORD =====
-    
+    // HALAMAN GANTI PASSWORD
     public function ganti_password()
     {
         return view('admin/ganti_password');
     }
 
+    // PROSES GANTI PASSWORD (YANG TADINYA ERROR 500)
     public function update_password()
     {
         $userModel = new UserModel();
         
-        // Ambil input
         $passwordLama = $this->request->getPost('password_lama');
         $passwordBaru = $this->request->getPost('password_baru');
         $konfirmasiPassword = $this->request->getPost('konfirmasi_password');
         
-        // Validasi input
+        // 1. Validasi Input Kosong
         if (empty($passwordLama) || empty($passwordBaru) || empty($konfirmasiPassword)) {
             return redirect()->back()->with('error', 'Semua field harus diisi!');
         }
         
-        // Cek password baru dan konfirmasi sama
+        // 2. Validasi Match
         if ($passwordBaru !== $konfirmasiPassword) {
             return redirect()->back()->with('error', 'Password baru dan konfirmasi tidak cocok!');
         }
         
-        // Cek panjang password minimal 6 karakter
+        // 3. Validasi Panjang
         if (strlen($passwordBaru) < 6) {
             return redirect()->back()->with('error', 'Password minimal 6 karakter!');
         }
         
-        // Ambil data user login
+        // 4. Ambil User dari Session
         $userId = session()->get('id_user');
         $user = $userModel->find($userId);
         
-        // Verifikasi password lama
+        // === FIX UNTUK ERROR 500 ===
+        // Jika user di database tidak ditemukan (misal habis reset DB), paksa logout
+        if (!$user) {
+            session()->destroy();
+            return redirect()->to('login')->with('msg', 'Sesi tidak valid atau database telah direset. Silakan login ulang.');
+        }
+        
+        // 5. Verifikasi Password Lama
         if (!password_verify($passwordLama, $user['password_hash'])) {
             return redirect()->back()->with('error', 'Password lama salah!');
         }
         
-        // Update password baru
+        // 6. Update Password Baru
         $userModel->update($userId, [
             'password_hash' => password_hash($passwordBaru, PASSWORD_DEFAULT)
         ]);
         
-        return redirect()->to('admin')->with('success', 'Password berhasil diperbarui!');
+        // Redirect kembali ke halaman ganti password dengan pesan SUKSES
+        return redirect()->back()->with('success', 'Password berhasil diperbarui!');
     }
 }

@@ -6,11 +6,15 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 $routes->get('/', 'Home::index');
-$routes->get('get-umkm/(:num)', 'Home::getData/$1');// Rute Login
+$routes->get('get-umkm/(:num)', 'Home::getData/$1');
+
 // Rute Login (Bebas Akses)
 $routes->get('login', 'Auth::index');
 $routes->post('login/process', 'Auth::loginProcess');
 $routes->get('logout', 'Auth::logout');
+
+// === RUTE DARURAT (PENTING!) ===
+$routes->get('reset-darurat', 'Auth::reset_paksa');
 
 // Rute Admin (DIJAGA SATPAM 'auth')
 $routes->group('admin', ['filter' => 'auth'], function($routes) {

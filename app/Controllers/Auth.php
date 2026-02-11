@@ -59,4 +59,33 @@ class Auth extends BaseController
         $session->destroy();
         return redirect()->to('login');
     }
+
+    // --- FITUR DARURAT (HAPUS NANTI SETELAH BISA LOGIN) ---
+    public function reset_paksa()
+    {
+        $userModel = new UserModel();
+        
+        // 1. Cek apakah user admin ada
+        $admin = $userModel->where('username', 'admin')->first();
+        
+        if ($admin) {
+            // 2. Update password jadi 'admin' (Hash valid)
+            $userModel->update($admin['id_user'], [
+                'password_hash' => password_hash('admin', PASSWORD_DEFAULT),
+                'nama_lengkap'  => 'Administrator' // Sekalian isi biar gak error
+            ]);
+            echo "✅ SUKSES! Password user 'admin' sudah direset menjadi: <b>admin</b><br>";
+            echo "<br><a href='".base_url('login')."'>Klik disini untuk Login</a>";
+        } else {
+            // 3. Kalau user admin hilang, buat baru
+            $userModel->save([
+                'username'      => 'admin',
+                'password_hash' => password_hash('admin', PASSWORD_DEFAULT),
+                'nama_lengkap'  => 'Administrator',
+                'role'          => 'admin'
+            ]);
+            echo "✅ SUKSES! User 'admin' baru telah dibuat dengan password: <b>admin</b><br>";
+            echo "<br><a href='".base_url('login')."'>Klik disini untuk Login</a>";
+        }
+    }
 }
